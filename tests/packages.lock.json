@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0-windows10.0.19041": {
+      "CommunityToolkit.WinUI.Notifications": {
+        "type": "Transitive",
+        "resolved": "7.1.2",
+        "contentHash": "vUYLJlW8+ev4qVIxaz3gix2UoSZX6gE7a9GLonC7taaqKWIiusVfzb62eoHSAOiXxyfqe8HknDk2rAdsF19igQ=="
+      },
+      "wechatnotify": {
+        "type": "Project",
+        "dependencies": {
+          "CommunityToolkit.WinUI.Notifications": "[7.1.2, )"
+        }
+      }
+    },
+    "net10.0-windows10.0.19041/win-x64": {}
+  }
+}
