@@ -46,9 +46,14 @@ internal static class AppState
     }
     internal static void Log(string name,object data)
     {try{Save(name,new{utc=DateTimeOffset.UtcNow,data});}catch{}}
-    internal sealed record LegacyIncident(bool blocked,string reason);
+    internal sealed record LegacyIncident(bool? blocked,string? reason);
     internal static bool BlocksPublicShortcut(bool ownBlock,bool legacyExists,LegacyIncident? legacy)=>ownBlock||
-        legacyExists&&(legacy==null||legacy.blocked&&legacy.reason!="STABILITY_INCIDENT_CHAT_NONINTERACTIVE_INPUT_MISSING");
+        legacyExists&&(legacy==null||legacy.blocked==null||legacy.blocked==true&&legacy.reason!="STABILITY_INCIDENT_CHAT_NONINTERACTIVE_INPUT_MISSING");
+    internal static LegacyIncident? ParseLegacyIncident(Stream json)
+    {
+        try{return JsonSerializer.Deserialize<LegacyIncident>(json);}
+        catch(JsonException){return null;}
+    }
     internal static bool IncidentBlocked
     {
         get
@@ -62,7 +67,7 @@ internal static class AppState
             if(exists)try
             {
                 using var file=new FileStream(legacy,FileMode.Open,FileAccess.Read,FileShare.Read);
-                if(file.Length<=4096&&(File.GetAttributes(legacy)&FileAttributes.ReparsePoint)==0)incident=JsonSerializer.Deserialize<LegacyIncident>(file);
+                if(file.Length<=4096&&(File.GetAttributes(legacy)&FileAttributes.ReparsePoint)==0)incident=ParseLegacyIncident(file);
             }catch{}
             return BlocksPublicShortcut(own,exists,incident);
         }
