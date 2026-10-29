@@ -1,6 +1,14 @@
 # Validation scope
 
-This is a release candidate. Compilation, isolated checks and one local human acceptance do not establish all-machine behavior.
+This is release candidate 0.2.0-rc.2. Compilation and isolated checks do not establish all-machine behavior. The local human acceptance described below belongs to predecessor rc.1, not the new rc.2 DLL.
+
+## rc.2 minimal protection fix
+
+The frozen rc.1 assembly was checked without launching the app or reading/modifying live incident files: in-memory `{}` and a record containing only `reason` both returned unblocked. Its non-nullable constructor boolean was populated as `false` when omitted. This is a real fail-open boundary for a legacy record, not a current-machine monitoring outage.
+
+rc.2 makes the legacy flag nullable, blocks an absent/null flag, and shares a small stream parser between production and isolated checks. Wrong types, invalid syntax and null/non-object roots return no trusted record and are blocked. A valid explicit `false` still permits the existing compatibility path; the known active window-only legacy reason and the independent new-product block retain their earlier semantics. No live incident file is edited.
+
+The regression cases run only on in-memory JSON through that production parser. The input transaction, notification path and installer are unchanged apart from release version labels. rc.2 has not been installed or sent a test notification; it does not inherit rc.1's exact-binary live acceptance.
 
 ## Evidence carried from the accepted implementation
 
@@ -8,7 +16,7 @@ On one Windows 11 x64 machine with official WeChat 4.1.15.56, the preceding impl
 
 A rapid hide-and-immediate-restore attempt previously failed and is not recategorized as passing. Shortcut collisions, user changes, suspended/locked desktops and application updates can still prevent activation. The code declines unsafe conditions and pauses repeated failures.
 
-## Candidate checks
+## rc.1 predecessor checks
 
 - Clean framework-dependent publish using locked cached dependencies; no SDK/runtime bundle or developer settings in package.
 - Isolated policy checks: first-use consent, bounded IPC/payloads, scoped incident protection, rejected foreign image/chords, partial-input cleanup, and system suppression.
@@ -20,13 +28,13 @@ A rapid hide-and-immediate-restore attempt previously failed and is not recatego
 - The uninstall preflight function was exercised in Windows PowerShell 5.1 on an isolated owned fixture: modified contents, an unsafe name and an unknown file all caused refusal while retaining the original. Full actual uninstall and rollback remain pending local acceptance.
 - The installed official WeChat 4.1.15.56 was recognized by read-only signature checks; known legacy incident protection remained unchanged and did not imply new shortcut consent.
 
-## Candidate live acceptance and local migration
+## rc.1 predecessor live acceptance and local migration
 
-The exact candidate binary was tested through one explicitly marked Windows notification on the same Windows 11 x64 / WeChat 4.1.15.56 machine. The user confirmed that the original WeChat opened normally with no tray overflow flash. The matching hot-host callback and activation result confirmed the existing process was foreground, no new WeChat process was started, and the overflow menu was never opened. The component measured 159 ms after callback processing began, including a 124 ms shortcut transaction; this is not a measured full physical-click latency. Raw receipts and local identifiers are private and are not exported.
+The exact rc.1 candidate binary was tested through one explicitly marked Windows notification on the same Windows 11 x64 / WeChat 4.1.15.56 machine. The user confirmed that the original WeChat opened normally with no tray overflow flash. The matching hot-host callback and activation result confirmed the existing process was foreground, no new WeChat process was started, and the overflow menu was never opened. The component measured 159 ms after callback processing began, including a 124 ms shortcut transaction; this is not a measured full physical-click latency. Raw receipts and local identifiers are private and are not exported.
 
 The same tested binary then replaced the local old helper's observer role after exact owned-registration/configuration backup. The old helper was normally stopped and its own login startup, notification identity and Start-menu entry retired; its program and incident block were retained for exact rollback. The new host reread the equivalent pre-authorized local startup setting, resumed the public source and bound the five original process leases. Original WeChat creation epochs and the old incident block hash were unchanged. This local user's prior startup consent is not a default for new installations.
 
-No source/native activation code was changed after that acceptance. Documentation and clean exports were finalized separately. These statements describe bounded local checks, not long-term stress acceptance.
+rc.1 code/binaries were frozen after that acceptance and the installed rc.1 remains unchanged. rc.2 changes only the protection parsing and version metadata noted above. These statements describe bounded local checks, not long-term stress acceptance.
 
 ## Not claimed passed
 

@@ -34,6 +34,8 @@ New official-image versions may continue experimental public attention observati
 
 Own incident-block.json blocks public shortcut activation and is preserved on uninstall. An unparseable legacy record or an active legacy block with an unknown reason fails closed. The explicitly classified legacy `STABILITY_INCIDENT_CHAT_NONINTERACTIVE_INPUT_MISSING` incident covers invasive window operations/probes, which are absent here; it does not by itself grant shortcut consent. Public shortcut activation still requires fresh per-user consent and its signed-image binding. No incident file is overwritten, cleared or migrated to bypass it.
 
+Since rc.2, missing/null `blocked` is represented separately from an explicit `false` and blocks activation. The shared stream parser rejects invalid field types or JSON as an untrusted record. This is local to the incident parser; global serializer options and other configuration formats are unchanged.
+
 ## Ownership and rollback
 
 Start menu, COM/AUMID registration, HKCU Run entry and packages are owned by this executable/product. They do not alter WeChat's startup/identity. Installer verifies all package hashes before staging and keeps one previous installation. Uninstaller preflights package ownership, flat safe names, duplicate names, hashes, unknown files and reparse points before deletion; it stops with an explanation on mismatch. No recursive user-folder cleanup is used. Custom/unknown files and incident blocks are preserved. A previous package can be restored with Rollback.cmd.
