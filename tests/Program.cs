@@ -17,6 +17,8 @@ checks["toast_rejects_extra_payload"]=!WeChatNotifier.Program.TrySubmission("act
 checks["current_incident_never_bypassed"]=AppState.BlocksPublicShortcut(true,true,new(true,"STABILITY_INCIDENT_CHAT_NONINTERACTIVE_INPUT_MISSING"));
 checks["legacy_window_incident_is_not_shortcut_consent"]=!AppState.BlocksPublicShortcut(false,true,new(true,"STABILITY_INCIDENT_CHAT_NONINTERACTIVE_INPUT_MISSING"));
 checks["unknown_incident_fails_closed"]=AppState.BlocksPublicShortcut(false,true,new(true,"UNKNOWN"))&&AppState.BlocksPublicShortcut(false,true,null);
+checks["legacy_missing_null_wrong_type_or_invalid_json_fails_closed"]=new[]{"{}","{\"reason\":\"UNKNOWN\"}","{\"blocked\":null}","{\"blocked\":\"false\"}","{\"blocked\":0}","{\"blocked\":true,\"reason\":123}","{","null","[]"}.All(BlocksLegacyJson);
+checks["legacy_explicit_false_remains_compatible"]=!BlocksLegacyJson("{\"blocked\":false}")&&!BlocksLegacyJson("{\"blocked\":false,\"reason\":\"UNKNOWN\"}");
 checks["own_image_not_accepted_as_wechat"]=OfficialApp.Verify(Environment.ProcessPath!)==null;
 checks["version_evidence_is_exact"]=OfficialApp.IsVerifiedPublicApiVersion("4.1.15.56")&&!OfficialApp.IsVerifiedPublicApiVersion("4.1.99.99");
 checks["user_chord_is_explicit"]=ConfiguredShortcutActivation.TryParse("Ctrl+Alt+W",out int key,out bool ctrl,out bool alt,out bool shift)&&key==87&&ctrl&&alt&&!shift;
@@ -26,3 +28,9 @@ checks["privacy_payload_has_no_message_data_slot"]=System.Xml.Linq.XElement.Pars
 checks["system_suppression_preserved"]=NotificationCore.SelectPresentation(new(false,true,5))==Presentation.Skip&&NotificationCore.SelectPresentation(new(true,true,2))==Presentation.Silent;
 Console.WriteLine(JsonSerializer.Serialize(new{passed=checks.Values.All(x=>x),checks,scope="No WeChat, notifications, registry writes or input; public policy and activation guards only"},new JsonSerializerOptions{WriteIndented=true}));
 return checks.Values.All(x=>x)?0:1;
+
+static bool BlocksLegacyJson(string json)
+{
+    using var stream=new MemoryStream(System.Text.Encoding.UTF8.GetBytes(json));
+    return AppState.BlocksPublicShortcut(false,true,AppState.ParseLegacyIncident(stream));
+}
