@@ -2,7 +2,7 @@
 param([string]$OutputDirectory,[switch]$Offline)
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$version='0.2.0-rc.1'
+$version='0.2.0-rc.2'
 if(-not $OutputDirectory){$OutputDirectory=Join-Path $root ('artifacts\release-'+$version)}
 $out=[IO.Path]::GetFullPath($OutputDirectory)
 if(Test-Path -LiteralPath $out){throw '输出目录已存在；请选择新的目录，不覆盖既有发行证据。'}
