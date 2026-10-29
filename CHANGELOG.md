@@ -1,3 +1,10 @@
+# 0.2.0-rc.2
+
+- Fix legacy incident parsing: missing/null `blocked`, wrong field types, invalid JSON and non-object/null roots now fail closed rather than treating an absent boolean as `false`.
+- Preserve explicit `blocked: false` compatibility and the separately scoped known legacy window incident; no notification, input, activation or installation behavior is otherwise changed.
+- Add in-memory regression cases using the same parser as production. Version labels/metadata updated.
+- Not installed on the development machine and not live-click accepted. rc.1 human acceptance remains predecessor evidence only.
+
 # 0.2.0-rc.1
 
 - Independent release candidate of the working public-attention notification path.
