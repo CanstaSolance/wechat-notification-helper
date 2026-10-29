@@ -5,7 +5,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
     <AssemblyName>WeChatNotify</AssemblyName><RootNamespace>WeChatNotifier</RootNamespace>
-    <Version>0.2.0-rc.1</Version><AssemblyVersion>0.2.0.0</AssemblyVersion>
+    <Version>0.2.0-rc.2</Version><AssemblyVersion>0.2.0.0</AssemblyVersion>
     <RepositoryUrl>https://github.com/CanstaSolance/wechat-notification-helper</RepositoryUrl>
     <Product>微信提醒助手（独立工具）</Product><ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyTitle>微信提醒助手</AssemblyTitle>

@@ -25,7 +25,7 @@ internal sealed class SettingsForm : Form
         table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));scroll.Controls.Add(table);Controls.Add(scroll);
         void Add(Control control){control.Margin=new Padding(0,0,0,12);control.Anchor=AnchorStyles.Left|AnchorStyles.Right;table.Controls.Add(control);}
         Add(new Label{Text="微信提醒助手",Font=new Font(Font.FontFamily,17,FontStyle.Bold),AutoSize=true});
-        Add(new Label{Text="独立工具 · 0.2.0-rc.1 · 默认无托盘图标",AutoSize=true,ForeColor=SystemColors.GrayText});
+        Add(new Label{Text="独立工具 · 0.2.0-rc.2 · 默认无托盘图标",AutoSize=true,ForeColor=SystemColors.GrayText});
         Add(status);
         Add(new Label{Text="仅观察 Windows 公开的微信关注事件，不读取聊天、联系人或账号。不是逐消息通知，可能漏报或与微信原提醒重复。系统勿扰设置仍生效。点击通知仅尝试用你确认的快捷键唤回正在运行的微信，不负责启动或登录。",AutoSize=true,MaximumSize=new Size(510,0)});
         var prefs=host.Preferences;consent.Checked=prefs.Consented;enabled.Checked=prefs.Enabled;startup.Checked=StartupManagement.Enabled;
