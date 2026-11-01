@@ -16,7 +16,7 @@ internal static class Program
     {
         if(!OperatingSystem.IsWindowsVersionAtLeast(10,0,19041)||System.Runtime.InteropServices.RuntimeInformation.OSArchitecture!=System.Runtime.InteropServices.Architecture.X64)return 3;
         string command=args.Length==0?"--settings":args.Length==1?args[0]:"";
-        if(command=="--version"){Console.WriteLine("0.2.0-rc.2 win-x64 framework-dependent .NET Desktop 10");return 0;}
+        if(command=="--version"){Console.WriteLine("0.3.0-rc.1 win-x64 framework-dependent .NET Desktop 10");return 0;}
         if(command is not ("--settings" or "--background" or "--desktop-settings" or "--desktop-background" or "--status" or "--quit" or "--pause" or "--resume" or "--test-notification" or "--unregister" or "-ToastActivated"))return 2;
         if(!AppState.IsNativeUserContext())
         {
@@ -179,18 +179,31 @@ internal sealed class BackgroundHost : ApplicationContext
             catch(Exception ex){done.TrySetResult(JsonSerializer.Serialize(new{error=ex.GetType().Name}));}
         });return done.Task;
     }
-    internal object Snapshot()=>new{product=AppState.Product,version="0.2.0-rc.2",pid=Environment.ProcessId,
+    internal object Snapshot()=>new{product=AppState.Product,version="0.3.0-rc.1",pid=Environment.ProcessId,
         consented=preferences.Consented,enabled=preferences.Enabled,sourcePhase=source?.Phase??"not-started",boundCount=source?.BoundCount??0,
         status,core=lastCore,shortcut=ConfiguredShortcutActivation.LastReadCode,lastActivation=ApplicationActivation.LastCode,
         incidentProtected=AppState.IncidentBlocked,startupEnabled=StartupManagement.Enabled,notification=sink?.LastDelivery,stateDirectory=AppState.Root,noTrayIcon=true};
     internal string StatusText=>status+"\n"+(!preferences.Consented?"尚未同意启用，监听未启动":preferences.Enabled?"提醒已启用":"提醒已暂停")+"；已绑定进程："+(source?.BoundCount??0)+
         "\n微信版本："+(OfficialApp.Current?.Version??"未识别")+"\n最近唤回："+ApplicationActivation.LastCode+
         (AppState.IncidentBlocked?"\n检测到保留的事故保护，自动唤回已禁用。":"");
+    internal CenterState CenterState
+    {
+        get
+        {
+            CenterPhase phase=CenterCopy.Phase(preferences.Consented,detecting,preferences.Enabled,OfficialApp.Current!=null&&sink!=null&&source!=null,source?.Phase??"not-started",source?.BoundCount??0);
+
+            var binding=ConfiguredShortcutActivation.Read();var image=OfficialApp.Current;bool blocked=AppState.IncidentBlocked;
+            return new(phase,image?.Version,image!=null&&!OfficialApp.IsVerifiedPublicApiVersion(image.Version),
+                !blocked&&binding is {Paused:false}&&image!=null&&binding.ImageHash==image.Hash&&binding.ImageVersion==image.Version,
+                blocked,"助手 0.3.0-rc.1\r\n来源状态："+(source?.Phase??"not-started")+"\r\n通知初始化："+status+"\r\n快捷键检查："+ConfiguredShortcutActivation.LastReadCode+
+                "\r\n最近打开结果："+ApplicationActivation.LastCode+"\r\n仅供本地排查；反馈时请勿附原始配置。");
+        }
+    }
     internal Preferences Preferences=>preferences;
     internal void OpenSettings()
     {
         if(settings is {IsDisposed:false}){ShowOwnSettings();return;}
-        settings=new SettingsForm(this);
+        settings=new SettingsForm(new LiveControlCenter(this));
         settings.FormClosed+=(_,_)=>{settings=null;if(!preferences.Consented)ExitThread();};ShowOwnSettings();
     }
     void ShowOwnSettings()
