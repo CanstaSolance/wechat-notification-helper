@@ -1,3 +1,11 @@
+# 0.3.0-rc.1 — 2026-11-02
+
+- Rebuilt the real WinForms control center with Overview, Notification settings, and Privacy/help; clearer state, inline feedback, keyboard actions and scrollable content with persistent save controls.
+- Added a display-only host boundary and isolated UI preview. No new framework, resident process, tray icon or notification/input pathway.
+- Clarified user-confirmed shortcut setup, pause/exit, experimental version support and notification limitations.
+- Added Chinese-first product documentation, English guide, versioned privacy notice, privacy-conscious issue template and real shared-form preview captures.
+- Retained notification engine, process/shortcut guards, single-instance lifecycle, installer/rollback/uninstaller and incident policy from rc.2.
+- UI/layout checks are distinct from predecessor notification acceptance. No new real-message, all-machine or long-duration claim; installed rc.1 is unchanged.
 # 0.2.0-rc.2
 
 - Fix legacy incident parsing: missing/null `blocked`, wrong field types, invalid JSON and non-object/null roots now fail closed rather than treating an absent boolean as `false`.
