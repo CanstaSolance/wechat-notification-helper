@@ -1,3 +1,27 @@
+# 0.3.0-rc.1 control-center validation — 2026-11-02
+
+This release changes the control center and public documentation. It does not extend WeChat event coverage or claim new incoming-message/notification-click acceptance. The installed rc.1 was not replaced.
+
+## Focused local UI checks
+
+- Production WinForms UI compiled with warnings treated as errors.
+- An isolated executable links the exact production SettingsForm, controls and display model. Its clearly labeled in-memory host does not read user configuration, connect to WeChat, register notifications, send shortcuts or alter startup. Captures are the actual running shared form, cropped to its client area; only the three public 100% images are exported.
+- The three navigation pages were rendered and visually inspected at baseline layout. Keyboard Tab/Enter opened settings in the real preview window; Alt+S exercised the first-consent inline error and successful in-memory save, including locking the accepted consent display.
+- The shared controls/handlers were also exercised directly in the isolated process: first-consent gate, memory save, unsaved-edit restore, and failed-save inline feedback all passed. This is not an acceptance of production disk/registry writes or Windows notification delivery.
+- Layout/font scaling simulations at 150% (1420×960 viewport) and 200% (1888×1000) were rendered. Settings layouts were visually inspected: content can scroll and save/restore remain visible. The simulation found and corrected an implicit outer-row height that could leave the footer beyond the viewport. All pages remain parented for layout/DPI propagation.
+- These are application scaling simulations, not changes to Windows display settings or actual 144/192-DPI monitor tests. Physical DPI transitions, multi-monitor behavior and live high-contrast switching remain unverified. System high-contrast colors and native control/keyboard semantics are implemented.
+- During later computer-use checks, a window capture returned black and input state became uncertain. Further OS input was stopped. Restore and error behavior are reported from the explicit shared-form handler checks, not recategorized as mouse/keyboard acceptance.
+- UI preview processes are transient and removed after checks. No additional monitoring host was installed. Closing the real control center still uses the existing host's single-instance/background lifetime; this unchanged lifecycle has predecessor acceptance, not new exact-binary deployment acceptance.
+
+The only new isolated release-policy checks cover honest status mapping: an enabled installation without a live target remains Waiting, lack of consent cannot advertise monitoring, and a missing ready source cannot advertise monitoring. The pre-existing guards remain part of the normal build checks.
+
+## Scope deliberately not retested
+
+No WeChat account/window/chat operation, live message, original tray-click repair, shortcut binding, installation upgrade, complete uninstall/rollback, system display change or 2/6-hour resource run was performed. Incident protection and the existing input transaction are retained. No all-machine, perfect notification or permanent update-compatibility claim is made.
+
+The historical evidence below belongs to older binaries and is retained for context.
+
+---
 # Validation scope
 
 This is release candidate 0.2.0-rc.2. Compilation and isolated checks do not establish all-machine behavior. The local human acceptance described below belongs to predecessor rc.1, not the new rc.2 DLL.
