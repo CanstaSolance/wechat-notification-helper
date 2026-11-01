@@ -26,6 +26,9 @@ checks["dangerous_or_incomplete_chords_rejected"]=!ConfiguredShortcutActivation.
 checks["partial_input_only_releases_owned_downs"]=ConfiguredShortcutActivation.Outstanding([17,18,87],4).SequenceEqual(new ushort[]{18,17});
 checks["privacy_payload_has_no_message_data_slot"]=System.Xml.Linq.XElement.Parse(PrivacyPayload.Build(Guid.NewGuid().ToString("N"),null,false)).Descendants("text").Count()==2;
 checks["system_suppression_preserved"]=NotificationCore.SelectPresentation(new(false,true,5))==Presentation.Skip&&NotificationCore.SelectPresentation(new(true,true,2))==Presentation.Silent;
+checks["installed_and_enabled_without_live_target_is_waiting"]=CenterCopy.Phase(true,false,true,true,"waiting",0)==CenterPhase.Waiting&&CenterCopy.Phase(true,false,true,true,"active",0)==CenterPhase.Waiting;
+checks["no_consent_never_advertises_monitoring"]=CenterCopy.Phase(false,false,true,true,"active",3)==CenterPhase.Setup;
+checks["unready_source_never_advertises_monitoring"]=CenterCopy.Phase(true,false,true,false,"active",3)==CenterPhase.Attention;
 Console.WriteLine(JsonSerializer.Serialize(new{passed=checks.Values.All(x=>x),checks,scope="No WeChat, notifications, registry writes or input; public policy and activation guards only"},new JsonSerializerOptions{WriteIndented=true}));
 return checks.Values.All(x=>x)?0:1;
 
