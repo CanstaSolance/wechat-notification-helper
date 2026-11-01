@@ -2,7 +2,7 @@
 param([string]$OutputDirectory,[switch]$Offline)
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$version='0.2.0-rc.2'
+$version='0.3.0-rc.1'
 if(-not $OutputDirectory){$OutputDirectory=Join-Path $root ('artifacts\release-'+$version)}
 $out=[IO.Path]::GetFullPath($OutputDirectory)
 if(Test-Path -LiteralPath $out){throw '输出目录已存在；请选择新的目录，不覆盖既有发行证据。'}
@@ -47,7 +47,8 @@ foreach($name in @('Install.cmd','Install.ps1','Rollback.cmd','Uninstall.ps1')) 
     if($name.EndsWith('.ps1')){[IO.File]::WriteAllText($to,[IO.File]::ReadAllText($from),[Text.UTF8Encoding]::new($true))}
     else{[IO.File]::WriteAllText($to,([IO.File]::ReadAllText($from).Replace("`r`n","`n").Replace("`n","`r`n")),[Text.UTF8Encoding]::new($false))}
 }
-foreach($name in @('LICENSE','README.zh-CN.md','THIRD_PARTY_NOTICES.md')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
+foreach($name in @('LICENSE','PRIVACY.md','THIRD_PARTY_NOTICES.md')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
+Copy-Item -LiteralPath (Join-Path $root 'docs\QUICKSTART.zh-CN.md') -Destination (Join-Path $package 'README.zh-CN.md')
 Copy-Item -LiteralPath (Join-Path $root 'docs\WINDOWS-SDK-LICENSE.rtf') -Destination (Join-Path $package 'WINDOWS-SDK-LICENSE.rtf')
 $files=@(Get-ChildItem -LiteralPath $package -File|Sort-Object Name|ForEach-Object{@{Name=$_.Name;Sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash}})
 @{Schema=1;Product='WeChatNotify';Version=$version;Architecture='win-x64';FrameworkDependent=$true;Files=$files}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $package 'package-files.json') -Encoding UTF8

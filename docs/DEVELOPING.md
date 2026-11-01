@@ -41,3 +41,18 @@ Since rc.2, missing/null `blocked` is represented separately from an explicit `f
 Start menu, COM/AUMID registration, HKCU Run entry and packages are owned by this executable/product. They do not alter WeChat's startup/identity. Installer verifies all package hashes before staging and keeps one previous installation. Uninstaller preflights package ownership, flat safe names, duplicate names, hashes, unknown files and reparse points before deletion; it stops with an explanation on mismatch. No recursive user-folder cleanup is used. Custom/unknown files and incident blocks are preserved. A previous package can be restored with Rollback.cmd.
 
 MIT covers project-owned code. Third-party terms and notices are included separately. Microsoft's published redistributable list explicitly covers the Windows SDK .NET projection and WinRT.Runtime assemblies for WinRT API use: https://learn.microsoft.com/en-us/legal/windows-sdk/redist (see the Microsoft.Windows.SDK.NET.Ref section). Validate the actual package notices again if dependencies change.
+
+## Control-center UI (0.3.0-rc.1)
+
+SettingsForm consumes IControlCenterHost, a display/action boundary. LiveControlCenter delegates to the existing BackgroundHost, shortcut confirmation and notification logic; no new input/event source is introduced. CenterCopy maps consent, source readiness/phase and actual bound target count into user-facing states. Paths/codes are confined to an optional section. Already accepted consent is a status, not a misleading stop switch. Saving disables navigation/management actions.
+
+The three pages remain parented and hide/show in one content container, so DPI/layout inheritance is retained. The outer row explicitly fills remaining space. At first show, minimum dimensions are clamped to the working area before the window is clamped. Long content scrolls; save actions remain outside it. High contrast uses SystemColors; physical monitor/theme validation remains separate.
+
+Development-only preview (not included in installed package):
+- Build tools/ControlCenterPreview/ControlCenterPreview.csproj with the .NET 10 SDK.
+- Run with --state setup, waiting, active, paused or error for labeled in-memory states.
+- --capture OUTPUT draws the real shared form into three client-area PNGs.
+- --scale 1.5 or 2 with --viewport WIDTHxHEIGHT simulates layout/font scaling, not an OS DPI transition.
+- --exercise RESULT.json runs a few actual shared-control handlers against memory state only, then exits.
+
+The preview has no reference to production runtime/configuration. Public images under docs/images are source/documentation assets only. Binary packages include a small standalone Chinese quick-start text and PRIVACY.md, not a screenshot folder. In-app help opens fixed version-tag GitHub URLs in the browser; release publication must verify that the tag and documents exist.

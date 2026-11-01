@@ -46,6 +46,18 @@
     "src/Runtime/WindowsNoticeSink.cs",
     "tests/ReleaseChecks.csproj",
     "tests/packages.lock.json",
-    "tests/Program.cs"
+    "tests/Program.cs",
+    "README.en.md",
+    "PRIVACY.md",
+    ".github/ISSUE_TEMPLATE/bug_report.md",
+    "docs/QUICKSTART.zh-CN.md",
+    "docs/images/overview.png",
+    "docs/images/settings.png",
+    "docs/images/privacy.png",
+    "src/ControlCenterModel.cs",
+    "src/CenterControls.cs",
+    "src/Runtime/LiveControlCenter.cs",
+    "tools/ControlCenterPreview/ControlCenterPreview.csproj",
+    "tools/ControlCenterPreview/Program.cs"
   ]
 }
