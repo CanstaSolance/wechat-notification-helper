@@ -14,21 +14,21 @@ internal sealed class LiveControlCenter(BackgroundHost host) : IControlCenterHos
     public CenterState State=>host.CenterState;
     public async Task<CenterResult> Save(CenterDraft draft)
     {
-        if(draft.Shortcut.Length>0 && (!draft.Confirmed || !ConfiguredShortcutActivation.TryParse(draft.Shortcut,out _,out _,out _,out _)))
-            return new(false,"请在微信的“设置 → 快捷键 → 显示/隐藏窗口”核对。当前只支持 Ctrl + Alt + 字母，可额外加 Shift；也可以留空，只接收提醒。");
+        if(draft.ShortcutChanged && draft.Shortcut.Length>0 && (!draft.Confirmed || !ConfiguredShortcutActivation.TryParse(draft.Shortcut,out _,out _,out _,out _)))
+            return new(false,"请在微信的“设置 → 快捷键 → 显示/隐藏窗口”核对。当前只支持 Ctrl + Alt + 字母，不支持 Shift；也可以留空，只接收提醒。");
         try
         {
             await host.SaveSettings(draft.Enabled,draft.Startup,draft.Path);
-            if(draft.Shortcut.Length>0)
+            if(draft.ShortcutChanged && draft.Shortcut.Length>0)
             {
                 if(AppState.IncidentBlocked)return new(false,"提醒设置已保存；本机的安全保护阻止了通知点击打开微信。请保留保护，暂时手动打开微信。");
                 if(!await ConfiguredShortcutActivation.Confirm(draft.Shortcut,draft.PauseShortcut))
                     return new(false,"提醒设置已保存；快捷键尚未保存。请确认选择的是官方微信，并重新核对快捷键。");
             }
-            else
+            else if(draft.ShortcutChanged)
             {
                 var old=ConfiguredShortcutActivation.Read();
-                if(old!=null)ConfiguredShortcutActivation.Write(old with{Paused=true});
+                if(old!=null)AppState.Save<ConfiguredShortcutActivation.Binding?>("activation-shortcut.json",null);
             }
             return State.Phase==CenterPhase.Attention
                 ?new(false,"设置已保存，但提醒没有准备好。请确认官方微信位置，再重新保存；也可查看隐私与帮助。")
