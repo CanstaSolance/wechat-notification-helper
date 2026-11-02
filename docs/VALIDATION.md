@@ -1,3 +1,16 @@
+# 0.3.0-rc.2 — compact product UI / shortcut entry
+
+The 920×680 shared WinForms control center replaces the sidebar with segmented navigation, a static explicitly labeled notification illustration, compact setting rows and edit-only save actions. No new framework, resident host or WeChat event/input source.
+
+Shortcut input is focused normal window key handling only. The shipped parser still accepts Ctrl+Alt+A–Z and rejects Shift. Recording commits on letter release; Escape, Tab, lost focus, window deactivation and a 12-second timeout cancel without persistence. An A–Z selector provides a no-typing fallback when another global shortcut intercepts input. Recording does not verify WeChat's actual shortcut. Changed bindings and same-key re-confirmation after an application update use the existing confirmation gate. Ordinary setting saves skip binding writes.
+
+Focused checks cover normalization against the actual parser for all letters, rejection of Shift/function/save accelerators, Escape/focus cancellation preserving an old value, release commit, unchanged-binding save policy, same-key update re-confirmation and changed-path re-confirmation. Isolated shared-form handler fixtures cover consent/save/restore/error and fallback selection resetting confirmation.
+
+Real OS shortcut capture with WeChat's global registration was NOT tested: this task does not connect to or operate WeChat. The fallback selector is exercised against the real shared control. No new notification delivery, installer or native input acceptance is claimed. Captures are actual shared-form renders with an isolated memory host, visibly labeled. Scaling captures simulate layout/fonts; physical monitor transitions/high contrast remain unverified.
+
+Older validation below is historical and does not establish this binary's live acceptance.
+
+---
 # 0.3.0-rc.1 control-center validation — 2026-11-02
 
 This release changes the control center and public documentation. It does not extend WeChat event coverage or claim new incoming-message/notification-click acceptance. The installed rc.1 was not replaced.
