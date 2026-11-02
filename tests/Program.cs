@@ -29,6 +29,16 @@ checks["system_suppression_preserved"]=NotificationCore.SelectPresentation(new(f
 checks["installed_and_enabled_without_live_target_is_waiting"]=CenterCopy.Phase(true,false,true,true,"waiting",0)==CenterPhase.Waiting&&CenterCopy.Phase(true,false,true,true,"active",0)==CenterPhase.Waiting;
 checks["no_consent_never_advertises_monitoring"]=CenterCopy.Phase(false,false,true,true,"active",3)==CenterPhase.Setup;
 checks["unready_source_never_advertises_monitoring"]=CenterCopy.Phase(true,false,true,false,"active",3)==CenterPhase.Attention;
+checks["shortcut_normalization_matches_real_parser"]=Enumerable.Range(65,26).All(k=>ShortcutEntryState.Normalize(Keys.Control|Keys.Alt|(Keys)k) is {} text&&ConfiguredShortcutActivation.TryParse(text,out int letter,out _,out _,out _)&&letter==k);
+checks["shortcut_rejects_shift_function_and_save_accelerator"]=ShortcutEntryState.Normalize(Keys.Control|Keys.Alt|Keys.Shift|Keys.W)==null&&ShortcutEntryState.Normalize(Keys.Control|Keys.Alt|Keys.F1)==null&&ShortcutEntryState.Normalize(Keys.Alt|Keys.S)==null;
+var entry=new ShortcutEntryState();entry.Set("Ctrl+Alt+K");entry.Begin();entry.Down(Keys.Control|Keys.Alt|Keys.W);entry.Down(Keys.Escape);
+checks["escape_preserves_previous"]=entry.Value=="Ctrl+Alt+K"&&!entry.Recording;
+entry.Begin();entry.Down(Keys.Control|Keys.Alt|Keys.W);entry.Cancel();checks["focus_cancel_preserves_previous"]=entry.Value=="Ctrl+Alt+K"&&!entry.Recording;
+entry.Begin();entry.Down(Keys.Control|Keys.Alt|Keys.W);checks["only_release_commits"]=entry.Value=="Ctrl+Alt+K"&&entry.Up(Keys.W)&&entry.Value=="Ctrl+Alt+W";
+var prior=new CenterValues(true,true,false,null,"Ctrl+Alt+K",true,false);
+checks["ordinary_settings_do_not_rebind"]=!CenterCopy.BindingEdited(prior,prior.Shortcut,prior.PauseShortcut,true,null);
+checks["same_shortcut_can_be_reconfirmed_after_update"]=CenterCopy.BindingEdited(prior with{Confirmed=false},prior.Shortcut,false,true,null);
+checks["changed_path_requires_reconfirmation"]=CenterCopy.BindingEdited(prior,prior.Shortcut,false,false,"different-install.exe");
 Console.WriteLine(JsonSerializer.Serialize(new{passed=checks.Values.All(x=>x),checks,scope="No WeChat, notifications, registry writes or input; public policy and activation guards only"},new JsonSerializerOptions{WriteIndented=true}));
 return checks.Values.All(x=>x)?0:1;
 
