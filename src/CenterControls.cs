@@ -4,12 +4,12 @@ namespace WeChatNotifier;
 internal static class CenterTheme
 {
     internal static bool Contrast => SystemInformation.HighContrast;
-    internal static Color Canvas => Contrast ? SystemColors.Window : Color.FromArgb(245,247,249);
+    internal static Color Canvas => Contrast ? SystemColors.Window : Color.FromArgb(244,246,245);
     internal static Color Surface => Contrast ? SystemColors.Window : Color.White;
-    internal static Color Text => Contrast ? SystemColors.WindowText : Color.FromArgb(29,45,53);
+    internal static Color Text => Contrast ? SystemColors.WindowText : Color.FromArgb(23,42,51);
     internal static Color Muted => Contrast ? SystemColors.WindowText : Color.FromArgb(86,105,116);
-    internal static Color Border => Contrast ? SystemColors.WindowText : Color.FromArgb(221,229,233);
-    internal static Color Accent => Contrast ? SystemColors.Highlight : Color.FromArgb(0,109,101);
+    internal static Color Border => Contrast ? SystemColors.WindowText : Color.FromArgb(228,234,231);
+    internal static Color Accent => Contrast ? SystemColors.Highlight : Color.FromArgb(8,127,114);
     internal static Color Tint => Contrast ? SystemColors.Control : Color.FromArgb(231,245,241);
     internal static Color OnAccent => Contrast ? SystemColors.HighlightText : Color.White;
     internal static void Button(Button b, bool primary = false)
@@ -56,7 +56,7 @@ internal sealed class SurfaceCard : TableLayoutPanel
     }
     GraphicsPath Outline()
     {
-        float radius=Math.Max(4,8*DeviceDpi/96f),d=radius*2;
+        float radius=Math.Max(4,17*DeviceDpi/96f),d=radius*2;
         var p=new GraphicsPath();p.AddArc(0,0,d,d,180,90);p.AddArc(Width-1-d,0,d,d,270,90);p.AddArc(Width-1-d,Height-1-d,d,d,0,90);p.AddArc(0,Height-1-d,d,d,90,90);p.CloseFigure();return p;
     }
     protected override void OnPaintBackground(PaintEventArgs e)

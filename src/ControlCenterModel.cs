@@ -3,8 +3,8 @@ namespace WeChatNotifier;
 // Display-only boundary. The preview host cannot access the notification engine or user state.
 internal enum CenterPhase { Setup, Checking, Active, Waiting, Paused, Attention }
 internal sealed record CenterState(CenterPhase Phase, string? WeChatVersion, bool Experimental, bool ShortcutReady, bool Protected, string TechnicalDetails);
-internal sealed record CenterValues(bool Consented, bool Enabled, bool Startup, string? Path, string Shortcut, bool Confirmed, bool PauseShortcut);
-internal sealed record CenterDraft(bool Enabled, bool Startup, string? Path, string Shortcut, bool Confirmed, bool PauseShortcut);
+internal sealed record CenterValues(bool Consented, bool Enabled, bool Startup, string? Path, string Shortcut, bool Confirmed, bool PauseShortcut, bool ShortcutChanged=false);
+internal sealed record CenterDraft(bool Enabled, bool Startup, string? Path, string Shortcut, bool Confirmed, bool PauseShortcut, bool ShortcutChanged=false);
 internal sealed record CenterResult(bool Success, string Message);
 internal interface IControlCenterHost
 {
@@ -19,16 +19,17 @@ internal interface IControlCenterHost
 }
 internal static class CenterCopy
 {
+    internal static bool BindingEdited(CenterValues old,string shortcut,bool pause,bool confirmed,string? path)=>shortcut!=old.Shortcut||pause!=old.PauseShortcut||(confirmed&&!old.Confirmed)||path!=old.Path;
     internal static CenterPhase Phase(bool consented,bool checking,bool enabled,bool ready,string source,int boundCount)=>
         !consented?CenterPhase.Setup:checking?CenterPhase.Checking:!enabled?CenterPhase.Paused:!ready?CenterPhase.Attention:source=="active"&&boundCount>0?CenterPhase.Active:CenterPhase.Waiting;
     internal static (string Title, string Description, string Badge) Status(CenterPhase phase) => phase switch
     {
-        CenterPhase.Active => ("正在提醒", "微信发出新提醒时，会通过 Windows 通知你。", "已就绪"),
-        CenterPhase.Waiting => ("等待微信", "请自行打开微信。助手会在后台等候，不会替你启动或登录。", "等候中"),
-        CenterPhase.Paused => ("提醒已暂停", "暂时不接收新的提醒。你可以随时恢复。", "已暂停"),
+        CenterPhase.Active => ("提醒已开启", "微信发出新提醒时，会通过 Windows 通知你。", "已就绪"),
+        CenterPhase.Waiting => ("等你打开微信", "微信运行后，助手会自动接收提醒。", "等候中"),
+        CenterPhase.Paused => ("提醒已暂停", "想继续时，点一下恢复。", "已暂停"),
         CenterPhase.Checking => ("正在检查微信", "正在确认安装位置与官方签名，请稍候。", "检查中"),
-        CenterPhase.Attention => ("需要检查设置", "提醒暂时没有准备好。请重新保存设置，或查看下方帮助。", "需处理"),
-        _ => ("先设置，再开始提醒", "了解助手如何工作，确认设置后，即可在后台等候提醒。", "尚未启用")
+        CenterPhase.Attention => ("未能准备好提醒", "请到设置选择官方微信程序，然后保存重试。", "需处理"),
+        _ => ("开启微信提醒", "先到设置了解并启用助手，快捷键可以稍后设置。", "尚未启用")
     };
     internal static string FriendlyFailure(Exception exception) => exception switch
     {
