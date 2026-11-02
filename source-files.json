@@ -58,6 +58,8 @@
     "src/CenterControls.cs",
     "src/Runtime/LiveControlCenter.cs",
     "tools/ControlCenterPreview/ControlCenterPreview.csproj",
-    "tools/ControlCenterPreview/Program.cs"
+    "tools/ControlCenterPreview/Program.cs",
+    "src/ProductControls.cs",
+    "src/ShortcutRecorder.cs"
   ]
 }

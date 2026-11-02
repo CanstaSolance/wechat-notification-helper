@@ -1,3 +1,6 @@
+# 0.3.0-rc.2 — Compact control center
+
+Top navigation, notification illustration, compact setting rows, edit-only save area and focused shortcut recording with A–Z fallback. Corrects Shift support wording. Existing bindings survive ordinary saves; same-key reconfirmation after updates uses existing gates. No native input-path expansion.
 # 0.3.0-rc.1 — 2026-11-02
 
 - Rebuilt the real WinForms control center with Overview, Notification settings, and Privacy/help; clearer state, inline feedback, keyboard actions and scrollable content with persistent save controls.

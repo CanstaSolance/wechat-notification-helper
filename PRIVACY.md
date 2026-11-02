@@ -1,6 +1,6 @@
 # 隐私说明 / Privacy notice
 
-适用版本：**0.3.0-rc.1**  
+适用版本：**0.3.0-rc.2**  
 更新日期：**2026-11-02**  
 适用对象：本仓库发行的微信提醒助手。它是独立、非官方工具，与微信、腾讯或微软没有隶属关系。
 
@@ -32,9 +32,9 @@
 
 ## 3. 通知里有什么，谁保存它
 
-通知包含通用的“微信有新提醒”等文字，不包含发件人、联系人名称、正文或聊天预览。测试提醒会明确属于测试。通知携带随机的本地操作标识，用于点击处理与技术关联，不是账号或消息标识。
+通知包含通用的“微信有新提醒”等文字，不包含发件人、联系人名称、正文或聊天预览。发送测试通知会明确属于测试。通知携带随机的本地操作标识，用于点击处理与技术关联，不是账号或消息标识。
 
-通知交给 Windows 后，可能留在 Windows 通知中心，受系统设置、清除操作及到期规则影响。本版本普通提醒设置约 60 分钟到期，测试提醒约 30 分钟到期；助手的提交记录不保证用户实际看到了弹窗。
+通知交给 Windows 后，可能留在 Windows 通知中心，受系统设置、清除操作及到期规则影响。本版本普通提醒设置约 60 分钟到期，发送测试通知约 30 分钟到期；助手的提交记录不保证用户实际看到了弹窗。
 
 **关闭设置窗口不会退出后台助手。** 在管理区退出后，新关注事件不再由该后台实例观察，但旧系统通知可能仍在。点击旧通知可能让 Windows 短暂启动通知点击处理进程；这不等于重新开启常驻提醒。不能把“退出”理解为立即删除所有系统通知或阻止 Windows 再激活任何处理过程。
 
@@ -70,8 +70,8 @@ Windows 通知、证书缓存/系统服务、微信和浏览器本身有自己�
 ## 6. 如何停止、清理与卸载
 
 - 不同意首次启用：关闭设置窗口即可退出，不启动关注事件来源。
-- 临时暂停：在概览暂停提醒，或停用通知点击打开；不删除设置及旧通知。
-- 完全退出后台助手：隐私与帮助 → 管理助手 → 退出助手；已交给 Windows 的旧通知仍可能存在。
+- 临时暂停：在提醒暂停提醒，或停用通知点击打开；不删除设置及旧通知。
+- 完全退出后台助手：帮助 → 管理助手 → 退出助手；已交给 Windows 的旧通知仍可能存在。
 - 卸载：在同一管理区选择卸载并确认。脚本先检查安装归属、文件清单与指纹，再正常退出、注销本工具自己的通知与启动注册，删除明确列出的本工具设置/状态文件和已知图标。
 - 修改过的发行文件、清单外文件、重定向目录或不安全路径会导致保留/停止，不做无条件递归删除。旧的可回退安装也只在通过检查后删除。卸载不删除微信安装、用户账号或聊天。
 - **保护标记、旧版本目录中的保护记录及未知文件会保留**，不会自动解除保护。状态目录若仍有保留文件，也会留下。便携程序目录不由安装卸载脚本删除，需你自行备份、清理。
@@ -91,7 +91,7 @@ Windows 通知、证书缓存/系统服务、微信和浏览器本身有自己�
 
 ## English summary
 
-Version 0.3.0-rc.1, updated 2026-11-02. This unofficial utility observes public process/window attention metadata, verifies installed program signatures/fingerprints, and checks Windows notification state. It does not read chat text, contacts, databases, credentials, clipboard or login tokens. No screenshot capture or global input-recording hook is shipped in the application.
+Version 0.3.0-rc.2, updated 2026-11-02. This unofficial utility observes public process/window attention metadata, verifies installed program signatures/fingerprints, and checks Windows notification state. It does not read chat text, contacts, databases, credentials, clipboard or login tokens. No screenshot capture or global input-recording hook is shipped in the application.
 
 Settings and bounded latest-state files under **%LOCALAPPDATA%\WeChatNotify** can contain paths, a Windows SID, file fingerprints, process metadata, timestamps and technical errors. They are not necessarily anonymous. Current-user notification/startup registrations and an extracted local icon are also used.
 
@@ -100,3 +100,4 @@ A personally confirmed shortcut can be sent once after a valid helper notificati
 Generic notifications have no sender/body. Windows may retain them after exit; an old notification click can briefly start a callback process without resuming monitoring. Uninstall removes known owned settings, registrations and verified package files; unknown/modified files and safety records remain. Uninstallation unregisters the helper identity and attempts related cleanup, but cannot guarantee immediate removal of all Windows notification caches/history. WeChat data is not removed.
 
 There is no proprietary upload, telemetry or update service. Browser links to GitHub/Microsoft, and Windows/WeChat's own network behavior, are separate. Never publish raw configuration, chat screenshots, personal paths or user identifiers in issues. The detailed sections above describe scope, local files, activation and cleanup limits.
+本版本只在录入控件明确获得焦点并进入录入时处理本窗口的普通按键事件，不安装全局键盘钩子、不在后台记录按键、不注册全局快捷键。按键选择和录入都不会测试发送组合键。
