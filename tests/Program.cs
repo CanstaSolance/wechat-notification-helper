@@ -5,10 +5,14 @@ using WeChatNotifier.Core;
 if(args.SequenceEqual(new[]{"--local-signature"}))
 {
     var image=OfficialApp.Detect();
-    Console.WriteLine(JsonSerializer.Serialize(new{verified=image!=null,version=image?.Version,currentDiskMatches=OfficialApp.CurrentDiskMatches,publicShortcutBlocked=AppState.IncidentBlocked,scope="Read-only public installed-image signature and existing incident policy; no UI content or input"}));
+Console.WriteLine(JsonSerializer.Serialize(new{verified=image!=null,version=image?.Version,currentDiskMatches=OfficialApp.CurrentDiskMatches,publicShortcutBlocked=AppState.IncidentBlocked,scope="Read-only public installed-image signature and existing incident policy; no UI content or input"}));
     return image==null?1:0;
 }
 var checks=new Dictionary<string,bool>();
+UiText.Set("zh");
+UiText.Persist=_=>throw new UnauthorizedAccessException("isolated");
+try{await UiText.SetAsync("en");checks["async_language_failure_keeps_previous"]=false;}catch(UnauthorizedAccessException){checks["async_language_failure_keeps_previous"]=UiText.Language=="zh";}finally{UiText.Persist=null;}
+var order=new List<string>();UiText.Persist=value=>{lock(order)order.Add(value);};await Task.WhenAll(UiText.SetAsync("en"),UiText.SetAsync("zh"));checks["async_language_writes_serialized"]=order.SequenceEqual(new[]{"en","zh"})&&UiText.Language=="zh";UiText.Persist=null;
 checks["new_users_have_no_implicit_consent"]=new Preferences().Consented==false;
 checks["bounded_ipc_rejects_paths"]=!LocalControl.Allowed("settings C:\\anything.exe");
 checks["bounded_ipc_rejects_extra_data"]=!LocalControl.Allowed("activate/"+Guid.NewGuid().ToString("N")+"&path=x");
