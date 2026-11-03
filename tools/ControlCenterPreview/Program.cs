@@ -8,8 +8,10 @@ internal static class Program
     {
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);Application.EnableVisualStyles();
         string Option(string name,string fallback){int i=Array.IndexOf(args,name);return i>=0&&i+1<args.Length?args[i+1]:fallback;}
+        UiText.Set(Option("--language","zh"));
         var host=new PreviewHost(Option("--state","waiting"));
         using var form=new SettingsForm(host);host.Form=form;
+        if(args.Contains("--native")){NativeRun.Run(form,Option("--output","."));return;}
         string output=Option("--capture","");float scale=float.Parse(Option("--scale","1"),System.Globalization.CultureInfo.InvariantCulture);
         string exercise=Option("--exercise","");
         if(exercise.Length>0)
