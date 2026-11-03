@@ -1,7 +1,7 @@
 # 隐私说明 / Privacy notice
 
-适用版本：**0.3.0-rc.2**  
-更新日期：**2026-11-02**  
+适用版本：**v0.3.0**  
+更新日期：**2026-11-03**  
 适用对象：本仓库发行的微信提醒助手。它是独立、非官方工具，与微信、腾讯或微软没有隶属关系。
 
 这份说明根据本版本源码编写。它解释工具自己的行为；不替代 Windows、微信、GitHub 或浏览器的隐私说明。
@@ -91,7 +91,7 @@ Windows 通知、证书缓存/系统服务、微信和浏览器本身有自己�
 
 ## English summary
 
-Version 0.3.0-rc.2, updated 2026-11-02. This unofficial utility observes public process/window attention metadata, verifies installed program signatures/fingerprints, and checks Windows notification state. It does not read chat text, contacts, databases, credentials, clipboard or login tokens. No screenshot capture or global input-recording hook is shipped in the application.
+Version v0.3.0, updated 2026-11-03. This unofficial utility observes public process/window attention metadata, verifies installed program signatures/fingerprints, and checks Windows notification state. It does not read chat text, contacts, databases, credentials, clipboard or login tokens. No screenshot capture or global input-recording hook is shipped in the application.
 
 Settings and bounded latest-state files under **%LOCALAPPDATA%\WeChatNotify** can contain paths, a Windows SID, file fingerprints, process metadata, timestamps and technical errors. They are not necessarily anonymous. Current-user notification/startup registrations and an extracted local icon are also used.
 
@@ -101,3 +101,5 @@ Generic notifications have no sender/body. Windows may retain them after exit; a
 
 There is no proprietary upload, telemetry or update service. Browser links to GitHub/Microsoft, and Windows/WeChat's own network behavior, are separate. Never publish raw configuration, chat screenshots, personal paths or user identifiers in issues. The detailed sections above describe scope, local files, activation and cleanup limits.
 本版本只在录入控件明确获得焦点并进入录入时处理本窗口的普通按键事件，不安装全局键盘钩子、不在后台记录按键、不注册全局快捷键。按键选择和录入都不会测试发送组合键。
+
+本次增加 ui-language.json，仅保存本工具的语言选择。[完整英文隐私说明](PRIVACY.en.md)。原有用户设置、快捷键及保护门不变。

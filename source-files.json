@@ -60,6 +60,13 @@
     "tools/ControlCenterPreview/ControlCenterPreview.csproj",
     "tools/ControlCenterPreview/Program.cs",
     "src/ProductControls.cs",
-    "src/ShortcutRecorder.cs"
+    "src/ShortcutRecorder.cs",
+    "src/UiText.cs",
+    "src/Strings.en.txt",
+    "tools/ControlCenterPreview/NativeRun.cs",
+    "PRIVACY.en.md",
+    "docs/images/en-reminders.png",
+    "docs/images/en-settings.png",
+    "docs/images/en-help.png"
   ]
 }
