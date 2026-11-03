@@ -39,6 +39,13 @@ var prior=new CenterValues(true,true,false,null,"Ctrl+Alt+K",true,false);
 checks["ordinary_settings_do_not_rebind"]=!CenterCopy.BindingEdited(prior,prior.Shortcut,prior.PauseShortcut,true,null);
 checks["same_shortcut_can_be_reconfirmed_after_update"]=CenterCopy.BindingEdited(prior with{Confirmed=false},prior.Shortcut,false,true,null);
 checks["changed_path_requires_reconfirmation"]=CenterCopy.BindingEdited(prior,prior.Shortcut,false,false,"different-install.exe");
+checks["non_chinese_system_defaults_to_english"]=UiText.Resolve(null,false,"fr-FR")=="en"&&UiText.Resolve(null,false,"de-DE")=="en";
+checks["existing_users_keep_chinese_and_explicit_language_wins"]=UiText.Resolve(null,true,"en-US")=="zh"&&UiText.Resolve("en",true,"zh-CN")=="en";
+UiText.Set("en");
+checks["english_notification_hides_body"]=PrivacyPayload.Build(Guid.NewGuid().ToString("N"),null,false).Contains("Message text hidden")&&UiText.T("设置")=="Settings";
+UiText.Set("zh");checks["language_reversible"]=UiText.ConvertText("Settings")=="设置";
+UiText.Set("zh");UiText.Persist=_=>throw new IOException("isolated simulated write failure");
+try{UiText.Set("en");checks["language_save_failure_is_atomic"]=false;}catch(IOException){checks["language_save_failure_is_atomic"]=UiText.Language=="zh";}finally{UiText.Persist=null;}
 Console.WriteLine(JsonSerializer.Serialize(new{passed=checks.Values.All(x=>x),checks,scope="No WeChat, notifications, registry writes or input; public policy and activation guards only"},new JsonSerializerOptions{WriteIndented=true}));
 return checks.Values.All(x=>x)?0:1;
 
