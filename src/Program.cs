@@ -16,7 +16,7 @@ internal static class Program
     {
         if(!OperatingSystem.IsWindowsVersionAtLeast(10,0,19041)||System.Runtime.InteropServices.RuntimeInformation.OSArchitecture!=System.Runtime.InteropServices.Architecture.X64)return 3;
         string command=args.Length==0?"--settings":args.Length==1?args[0]:"";
-        if(command=="--version"){Console.WriteLine("v0.3.0 build ui-fix.20261103.1 win-x64 framework-dependent .NET Desktop 10");return 0;}
+        if(command=="--version"){Console.WriteLine("v0.3.0 build ui-polish.20261103.2 win-x64 framework-dependent .NET Desktop 10");return 0;}
         if(command is not ("--settings" or "--background" or "--desktop-settings" or "--desktop-background" or "--status" or "--quit" or "--pause" or "--resume" or "--test-notification" or "--unregister" or "-ToastActivated"))return 2;
         if(!AppState.IsNativeUserContext())
         {
@@ -116,7 +116,7 @@ internal sealed class BackgroundHost : ApplicationContext
     ConfiguredShortcutActivation.Binding? displayBinding;
     bool displayBlocked;
     Preferences preferences;
-    SettingsForm? settings;
+    SettingsWindow? settings;
     NotificationCore? core;
     PublicAttentionSource? source;
     WindowsNoticeSink? sink;
@@ -183,7 +183,7 @@ internal sealed class BackgroundHost : ApplicationContext
             catch(Exception ex){done.TrySetResult(JsonSerializer.Serialize(new{error=ex.GetType().Name}));}
         });return done.Task;
     }
-    internal object Snapshot()=>new{product=AppState.Product,version="0.3.0",buildRevision="ui-fix.20261103.1",pid=Environment.ProcessId,
+    internal object Snapshot()=>new{product=AppState.Product,version="0.3.0",buildRevision="ui-polish.20261103.2",pid=Environment.ProcessId,
         consented=preferences.Consented,enabled=preferences.Enabled,sourcePhase=source?.Phase??"not-started",boundCount=source?.BoundCount??0,
         status,core=lastCore,shortcut=ConfiguredShortcutActivation.LastReadCode,lastActivation=ApplicationActivation.LastCode,
         incidentProtected=AppState.IncidentBlocked,startupEnabled=StartupManagement.Enabled,notification=sink?.LastDelivery,stateDirectory=AppState.Root,noTrayIcon=true};
@@ -199,7 +199,7 @@ internal sealed class BackgroundHost : ApplicationContext
             var binding=displayBinding;var image=OfficialApp.Current;bool blocked=displayBlocked;
             return new(phase,image?.Version,image!=null&&!OfficialApp.IsVerifiedPublicApiVersion(image.Version),
                 !blocked&&binding is {Paused:false}&&image!=null&&binding.ImageHash==image.Hash&&binding.ImageVersion==image.Version,
-                blocked,"WeChat Notify v0.3.0 / ui-fix.20261103.1\r\n"+UiText.T("来源状态：")+(source?.Phase??"not-started")+"\r\n"+UiText.T("通知初始化：")+status+"\r\n"+UiText.T("快捷键检查：")+ConfiguredShortcutActivation.LastReadCode+
+                blocked,"WeChat Notify v0.3.0 / ui-polish.20261103.2\r\n"+UiText.T("来源状态：")+(source?.Phase??"not-started")+"\r\n"+UiText.T("通知初始化：")+status+"\r\n"+UiText.T("快捷键检查：")+ConfiguredShortcutActivation.LastReadCode+
                 "\r\n"+UiText.T("最近打开结果：")+ApplicationActivation.LastCode+"\r\n"+UiText.T("仅供本地排查；反馈时请勿附原始配置。"));
         }
     }
@@ -208,8 +208,8 @@ internal sealed class BackgroundHost : ApplicationContext
     internal void OpenSettings()
     {
         if(settings is {IsDisposed:false}){ShowOwnSettings();return;}
-        settings=new SettingsForm(new LiveControlCenter(this));
-        settings.FormClosed+=(_,_)=>{settings=null;if(!preferences.Consented)ExitThread();};ShowOwnSettings();
+        settings=new SettingsWindow(new LiveControlCenter(this));
+        settings.Closed+=(_,_)=>{settings=null;if(!preferences.Consented)ExitThread();};ShowOwnSettings();
     }
     void ShowOwnSettings()
     {
@@ -242,7 +242,7 @@ internal sealed class BackgroundHost : ApplicationContext
     void WriteStatus(){displayBinding=ConfiguredShortcutActivation.Read();displayBlocked=AppState.IncidentBlocked;AppState.Log("status.json",Snapshot());}
     protected override void ExitThreadCore()
     {
-        if(closing)return;closing=true;discovery.Stop();control.Dispose();core?.Dispose();settings?.Close();WriteStatus();base.ExitThreadCore();
+        if(closing)return;closing=true;discovery.Stop();control.Dispose();core?.Dispose();settings?.CloseWithoutPrompt();WriteStatus();base.ExitThreadCore();
     }
     protected override void Dispose(bool disposing)
     {if(disposing){if(activationSubscribed)ToastNotificationManagerCompat.OnActivated-=Activated;discovery.Dispose();control.Dispose();core?.Dispose();dispatcher.Dispose();}base.Dispose(disposing);}
