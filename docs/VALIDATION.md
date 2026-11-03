@@ -1,3 +1,13 @@
+# Current r2 view validation (2026-11-03)
+
+This section applies to build `ui-polish.20261103.2`. Earlier sections below are historical results for the previous WinForms view and must not be read as r2 acceptance. The UI is WPF within the same existing WinForms STA host. The old native child-tree compositor and control code were removed.
+
+An isolated memory-host WPF preview on a physical 125% DPI monitor was used for actual whole-window screen captures in both languages, including caption, normal/narrow/maximized layouts. All six captures per language passed foreground/page/language gates. Probe outcomes covered six page changes, two language changes, dirty-setting preservation, Cancel restoration, explicit shortcut confirmation, maximize/restore and one close/reopen on the same STA. No WeChat or notification channel was touched. At 125% DPI, English first settings paint and UI queue ready: 33ms, warm settings: 15ms; first/warm language: 51/31ms. Chinese: 45ms, 19ms, 38/50ms. Construction was about 448–450ms before the final control-style pass, and 466ms in a later Chinese run. These are synchronous action through WPF render and queue readiness with DwmFlush, not measured physical click latency. Instrumented rendering intervals varied, including stalls; reduced-motion branch disabled decorative animation. A separate uninstrumented five-second visible-idle sample used 15.625ms CPU and 61.94MB to 61.70MB private bytes; five seconds after closing used 15.625ms CPU and 62.23MB to 59.94MB private bytes. The idle sample is one short isolated run, not a multi-hour resident claim. Close/reopen probes found same-STA recovery; their closed-idle CPU endpoints were taken before reopening. The final ComboBox and CheckBox templates rendered in both languages; the native scrollbar was retained for known keyboard and accessibility behavior.
+
+Only the isolated helper UI was rendered. Real message receipt, notification click, WeChat interaction, installed r2 binary, Snap hover, multi-monitor DPI transitions, actual 150/200% monitors, live high-contrast switching and six-hour resource stability remain unverified.
+
+---
+
 # v0.3.0 repaint and language revision — 2026-11-03
 
 This updates assets in the existing release; it does not create a new Release or move the historical v0.3.0-rc.2 tag. The new source ZIP/manifest exact file set is authoritative. Display version v0.3.0; build revision ui-fix.20261103.1; base commit 96f948fb79807cca4263f038420825b146749fda.
