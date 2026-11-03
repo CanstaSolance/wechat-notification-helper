@@ -15,31 +15,32 @@ internal sealed class LiveControlCenter(BackgroundHost host) : IControlCenterHos
     public async Task<CenterResult> Save(CenterDraft draft)
     {
         if(draft.ShortcutChanged && draft.Shortcut.Length>0 && (!draft.Confirmed || !ConfiguredShortcutActivation.TryParse(draft.Shortcut,out _,out _,out _,out _)))
-            return new(false,"请在微信的“设置 → 快捷键 → 显示/隐藏窗口”核对。当前只支持 Ctrl + Alt + 字母，不支持 Shift；也可以留空，只接收提醒。");
+            return new(false,UiText.T("请在微信的“设置 → 快捷键 → 显示/隐藏窗口”核对。当前只支持 Ctrl + Alt + 字母，不支持 Shift；也可以留空，只接收提醒。"));
         try
         {
             await host.SaveSettings(draft.Enabled,draft.Startup,draft.Path);
             if(draft.ShortcutChanged && draft.Shortcut.Length>0)
             {
-                if(AppState.IncidentBlocked)return new(false,"提醒设置已保存；本机的安全保护阻止了通知点击打开微信。请保留保护，暂时手动打开微信。");
+                if(AppState.IncidentBlocked)return new(false,UiText.T("提醒设置已保存；本机的安全保护阻止了通知点击打开微信。请保留保护，暂时手动打开微信。"));
                 if(!await ConfiguredShortcutActivation.Confirm(draft.Shortcut,draft.PauseShortcut))
-                    return new(false,"提醒设置已保存；快捷键尚未保存。请确认选择的是官方微信，并重新核对快捷键。");
+                    return new(false,UiText.T("提醒设置已保存；快捷键尚未保存。请确认选择的是官方微信，并重新核对快捷键。"));
             }
             else if(draft.ShortcutChanged)
             {
                 var old=ConfiguredShortcutActivation.Read();
                 if(old!=null)AppState.Save<ConfiguredShortcutActivation.Binding?>("activation-shortcut.json",null);
             }
+            host.RefreshDisplayState();
             return State.Phase==CenterPhase.Attention
-                ?new(false,"设置已保存，但提醒没有准备好。请确认官方微信位置，再重新保存；也可查看隐私与帮助。")
-                :new(true,"设置已保存。关闭窗口后，助手会继续在后台运行。");
+                ?new(false,UiText.T("设置已保存，但提醒没有准备好。请确认官方微信位置，再重新保存；也可查看隐私与帮助。"))
+                :new(true,UiText.T("设置已保存。关闭窗口后，助手会继续在后台运行。"));
         }
         catch(Exception ex){return new(false,CenterCopy.FriendlyFailure(ex));}
     }
     public CenterResult SetEnabled(bool enabled)
     {
-        if(!host.Preferences.Consented)return new(false,"请先到“提醒设置”了解并启用助手。");
-        try{host.SetEnabled(enabled);return new(true,enabled?"已恢复提醒。":"已暂停提醒，助手仍在后台。");}
+        if(!host.Preferences.Consented)return new(false,UiText.T("请先到“提醒设置”了解并启用助手。"));
+        try{host.SetEnabled(enabled);return new(true,enabled?UiText.T("已恢复提醒。"):UiText.T("已暂停提醒，助手仍在后台。"));}
         catch(Exception ex){return new(false,CenterCopy.FriendlyFailure(ex));}
     }
     public CenterResult Test()
@@ -47,7 +48,7 @@ internal sealed class LiveControlCenter(BackgroundHost host) : IControlCenterHos
         try
         {
             var r=host.Test();
-            return new(r.Submitted,r.Submitted?"测试提醒已交给 Windows。若没有弹出，请查看通知中心，并检查勿扰及通知设置。":"测试提醒暂时无法显示。请先保存设置，并在 Windows 中允许“微信提醒助手”通知。");
+            return new(r.Submitted,r.Submitted?UiText.T("测试提醒已交给 Windows。若没有弹出，请查看通知中心，并检查勿扰及通知设置。"):UiText.T("测试提醒暂时无法显示。请先保存设置，并在 Windows 中允许“微信提醒助手”通知。"));
         }
         catch(Exception ex){return new(false,CenterCopy.FriendlyFailure(ex));}
     }
