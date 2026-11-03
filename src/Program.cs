@@ -16,7 +16,7 @@ internal static class Program
     {
         if(!OperatingSystem.IsWindowsVersionAtLeast(10,0,19041)||System.Runtime.InteropServices.RuntimeInformation.OSArchitecture!=System.Runtime.InteropServices.Architecture.X64)return 3;
         string command=args.Length==0?"--settings":args.Length==1?args[0]:"";
-        if(command=="--version"){Console.WriteLine("0.3.0-rc.2 win-x64 framework-dependent .NET Desktop 10");return 0;}
+        if(command=="--version"){Console.WriteLine("v0.3.0 build ui-fix.20261103.1 win-x64 framework-dependent .NET Desktop 10");return 0;}
         if(command is not ("--settings" or "--background" or "--desktop-settings" or "--desktop-background" or "--status" or "--quit" or "--pause" or "--resume" or "--test-notification" or "--unregister" or "-ToastActivated"))return 2;
         if(!AppState.IsNativeUserContext())
         {
@@ -25,6 +25,7 @@ internal static class Program
             // IPC-only commands do not read/write configuration and can safely forward.
             if(command is not ("--status" or "--quit" or "--pause" or "--resume" or "--test-notification"))return 5;
         }
+        UiText.Set(UiText.Resolve(AppState.Read<UiText.Preference>("ui-language.json")?.Language,AppState.Load().Consented,System.Globalization.CultureInfo.CurrentUICulture.Name));UiText.Persist=language=>AppState.Save("ui-language.json",new UiText.Preference(language));
         command=command.Replace("--desktop-","--",StringComparison.Ordinal);
         if(command=="--unregister")
         {
@@ -43,6 +44,7 @@ internal static class Program
         if(command=="-ToastActivated")return ColdToast(true);
         if(command is "--status" or "--quit" or "--pause" or "--resume" or "--test-notification"){Console.WriteLine("NOT_RUNNING");return command=="--quit"?0:4;}
         if(command=="--background"&&!AppState.Load().Consented)return 4;
+
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);Application.EnableVisualStyles();
         try
         {
@@ -111,6 +113,8 @@ internal sealed class BackgroundHost : ApplicationContext
     readonly LocalControl control;
     readonly System.Windows.Forms.Timer discovery=new(){Interval=30000};
     readonly Preferences initial=AppState.Load();
+    ConfiguredShortcutActivation.Binding? displayBinding;
+    bool displayBlocked;
     Preferences preferences;
     SettingsForm? settings;
     NotificationCore? core;
@@ -179,7 +183,7 @@ internal sealed class BackgroundHost : ApplicationContext
             catch(Exception ex){done.TrySetResult(JsonSerializer.Serialize(new{error=ex.GetType().Name}));}
         });return done.Task;
     }
-    internal object Snapshot()=>new{product=AppState.Product,version="0.3.0-rc.2",pid=Environment.ProcessId,
+    internal object Snapshot()=>new{product=AppState.Product,version="0.3.0",buildRevision="ui-fix.20261103.1",pid=Environment.ProcessId,
         consented=preferences.Consented,enabled=preferences.Enabled,sourcePhase=source?.Phase??"not-started",boundCount=source?.BoundCount??0,
         status,core=lastCore,shortcut=ConfiguredShortcutActivation.LastReadCode,lastActivation=ApplicationActivation.LastCode,
         incidentProtected=AppState.IncidentBlocked,startupEnabled=StartupManagement.Enabled,notification=sink?.LastDelivery,stateDirectory=AppState.Root,noTrayIcon=true};
@@ -192,13 +196,14 @@ internal sealed class BackgroundHost : ApplicationContext
         {
             CenterPhase phase=CenterCopy.Phase(preferences.Consented,detecting,preferences.Enabled,OfficialApp.Current!=null&&sink!=null&&source!=null,source?.Phase??"not-started",source?.BoundCount??0);
 
-            var binding=ConfiguredShortcutActivation.Read();var image=OfficialApp.Current;bool blocked=AppState.IncidentBlocked;
+            var binding=displayBinding;var image=OfficialApp.Current;bool blocked=displayBlocked;
             return new(phase,image?.Version,image!=null&&!OfficialApp.IsVerifiedPublicApiVersion(image.Version),
                 !blocked&&binding is {Paused:false}&&image!=null&&binding.ImageHash==image.Hash&&binding.ImageVersion==image.Version,
-                blocked,"助手 0.3.0-rc.2\r\n来源状态："+(source?.Phase??"not-started")+"\r\n通知初始化："+status+"\r\n快捷键检查："+ConfiguredShortcutActivation.LastReadCode+
-                "\r\n最近打开结果："+ApplicationActivation.LastCode+"\r\n仅供本地排查；反馈时请勿附原始配置。");
+                blocked,"WeChat Notify v0.3.0 / ui-fix.20261103.1\r\n"+UiText.T("来源状态：")+(source?.Phase??"not-started")+"\r\n"+UiText.T("通知初始化：")+status+"\r\n"+UiText.T("快捷键检查：")+ConfiguredShortcutActivation.LastReadCode+
+                "\r\n"+UiText.T("最近打开结果：")+ApplicationActivation.LastCode+"\r\n"+UiText.T("仅供本地排查；反馈时请勿附原始配置。"));
         }
     }
+    internal void RefreshDisplayState()=>WriteStatus();
     internal Preferences Preferences=>preferences;
     internal void OpenSettings()
     {
@@ -234,7 +239,7 @@ internal sealed class BackgroundHost : ApplicationContext
         Process.Start(start)?.Dispose();ExitThread();
     }
     void RefreshSettings(){settings?.RefreshStatus();}
-    void WriteStatus()=>AppState.Log("status.json",Snapshot());
+    void WriteStatus(){displayBinding=ConfiguredShortcutActivation.Read();displayBlocked=AppState.IncidentBlocked;AppState.Log("status.json",Snapshot());}
     protected override void ExitThreadCore()
     {
         if(closing)return;closing=true;discovery.Stop();control.Dispose();core?.Dispose();settings?.Close();WriteStatus();base.ExitThreadCore();
