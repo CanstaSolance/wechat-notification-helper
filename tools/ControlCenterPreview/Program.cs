@@ -1,80 +1,39 @@
-using WeChatNotifier;
-using System.Drawing.Imaging;
+using System.Diagnostics;
+using Application=System.Windows.Forms.Application;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text.Json;
-
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Threading;
+using WeChatNotifier;
+using Button=System.Windows.Controls.Button;
+using CheckBox=System.Windows.Controls.CheckBox;
+using ComboBox=System.Windows.Controls.ComboBox;
 internal static class Program
 {
-    [STAThread] static void Main(string[] args)
-    {
-        Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);Application.EnableVisualStyles();
-        string Option(string name,string fallback){int i=Array.IndexOf(args,name);return i>=0&&i+1<args.Length?args[i+1]:fallback;}
-        UiText.Set(Option("--language","zh"));
-        var host=new PreviewHost(Option("--state","waiting"));
-        using var form=new SettingsForm(host);host.Form=form;
-        if(args.Contains("--native")){NativeRun.Run(form,Option("--output","."));return;}
-        string output=Option("--capture","");float scale=float.Parse(Option("--scale","1"),System.Globalization.CultureInfo.InvariantCulture);
-        string exercise=Option("--exercise","");
-        if(exercise.Length>0)
-        {
-            form.Shown+=(_,_) =>
-            {
-                var results=new Dictionary<string,bool>();
-                T Field<T>(string name) where T:Control => (T)typeof(SettingsForm).GetField(name,System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance)!.GetValue(form)!;
-                form.ShowPage(1);
-                var save=Field<Button>("save");var consent=Field<CheckBox>("consent");var startup=Field<CheckBox>("startup");var cancel=Field<Button>("cancel");var feedback=Field<Label>("feedback");
-                startup.Checked=!host.Values.Startup;
-                if(host.Values.Consented)
-                {
-                    save.PerformClick();results["error_feedback_is_inline"]=feedback.Text.Contains("错误展示");
-                    results["error_does_not_claim_success"]=!feedback.Text.StartsWith("✓");
-                }
-                else
-                {
-                    save.PerformClick();results["first_use_requires_consent"]=feedback.Text.Contains("同意")&&!host.Values.Consented;
-                    consent.Checked=true;save.PerformClick();results["memory_save_and_consent_lock"]=host.Values.Consented&&!consent.Enabled&&feedback.Text.Contains("内存");
-                }
-                var recorder=Field<ShortcutRecorder>("recorder");var confirm=Field<CheckBox>("confirmed");var select=Field<ComboBox>("letters");
-                select.SelectedIndex=10;confirm.Checked=true;select.SelectedIndex=11;
-                results["fallback_selection_resets_confirmation"]=recorder.Entry.Value=="Ctrl+Alt+L"&&!confirm.Checked;
-                Field<Button>("later").PerformClick();results["defer_preserves_saved_shortcut"]=recorder.Entry.Value==host.Values.Shortcut;cancel.PerformClick();
-                startup.Checked=!host.Values.Startup;results["editing_enables_restore"]=cancel.Enabled;
-                cancel.PerformClick();results["restore_discards_only_unsaved_edits"]=startup.Checked==host.Values.Startup&&!Field<FlowLayoutPanel>("saveActions").Visible;
-                File.WriteAllText(exercise,JsonSerializer.Serialize(new{passed=results.Values.All(x=>x),checks=results,scope="Actual shared-form controls and handlers, isolated memory host; no Windows input or user-state writes."},new JsonSerializerOptions{WriteIndented=true}));
-                form.Close();
-            };
-            Application.Run(form);return;
-        }
-        if(output.Length>0)
-        {
-            Directory.CreateDirectory(output);int page=0;
-            var timer=new System.Windows.Forms.Timer{Interval=600};
-            form.Shown+=(_,_)=>{if(scale!=1){var fonts=new Dictionary<Control,Font>();void Fonts(Control c){fonts[c]=c.Font;foreach(Control child in c.Controls)Fonts(child);}Fonts(form);form.Scale(new SizeF(scale,scale));foreach(var pair in fonts)pair.Key.Font=new Font(pair.Value.FontFamily,pair.Value.Size*scale,pair.Value.Style);form.ClientSize=new Size((int)(920*scale),(int)(680*scale));form.PerformLayout();}string viewport=Option("--viewport","");if(viewport.Length>0){var sizes=viewport.Split('x');var size=new Size(int.Parse(sizes[0]),int.Parse(sizes[1]));form.MinimumSize=new Size(Math.Min(form.MinimumSize.Width,size.Width),Math.Min(form.MinimumSize.Height,size.Height));form.ClientSize=size;}timer.Start();};
-            timer.Tick+=(_,_)=>{form.ShowPage(page);form.PerformLayout();if(page==1){var list=new List<object>();void Scan(Control c,int depth){if(depth>3)return;list.Add(new{type=c.GetType().Name,bounds=c.Bounds.ToString(),client=c.ClientSize.ToString(),minimum=c.MinimumSize.ToString(),font=c.Font.Size,dock=c.Dock.ToString(),visible=c.Visible});foreach(Control child in c.Controls)Scan(child,depth+1);}Scan(form,0);File.WriteAllText(Path.Combine(output,"layout.json"),JsonSerializer.Serialize(list));}using var bitmap=new Bitmap(form.Width,form.Height);form.DrawToBitmap(bitmap,form.ClientRectangle with{Width=form.Width,Height=form.Height});var origin=form.PointToScreen(Point.Empty);var client=new Rectangle(origin.X-form.Left,origin.Y-form.Top,form.ClientSize.Width,form.ClientSize.Height);using var cropped=bitmap.Clone(client,PixelFormat.Format32bppArgb);cropped.Save(Path.Combine(output,new[]{"overview","settings","privacy"}[page]+".png"),ImageFormat.Png);if(++page==3){timer.Stop();form.Close();}};
-            Application.Run(form);timer.Dispose();
-        }
-        else Application.Run(form);
-    }
+ [DllImport("user32.dll")]static extern IntPtr GetForegroundWindow();
+ [DllImport("user32.dll")]static extern bool SetForegroundWindow(IntPtr h);
+ [DllImport("dwmapi.dll")]static extern int DwmFlush();
+ [DllImport("dwmapi.dll")]static extern int DwmGetWindowAttribute(IntPtr h,int a,out R r,int size);
+ [StructLayout(LayoutKind.Sequential)]struct R{public int L,T,Right,Bottom;}
+ [STAThread]static void Main(string[] args){Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);Application.EnableVisualStyles();string Option(string key,string fallback){int i=Array.IndexOf(args,key);return i>=0&&i+1<args.Length?args[i+1]:fallback;}UiText.Set(Option("--language","en"));var host=new PreviewHost();var clock=Stopwatch.StartNew();var window=new SettingsWindow(host);host.Window=window;window.ReducedMotionOverride=args.Contains("--reduced");if(window.ReducedMotionOverride)window.Resources["HoverDuration"]=new Duration(TimeSpan.Zero);double constructionMs=clock.Elapsed.TotalMilliseconds;var context=new ApplicationContext();if(!args.Contains("--probe")&&!args.Contains("--lifecycle")&&!args.Contains("--idle"))window.Closed+=(_,_)=>context.ExitThread();window.Show();if(args.Contains("--lifecycle"))window.Dispatcher.BeginInvoke(async()=>{await Task.Delay(250);window.CloseWithoutPrompt();var proc=Process.GetCurrentProcess();double before=proc.TotalProcessorTime.TotalMilliseconds;await Task.Delay(1000);proc.Refresh();double closedCpu=proc.TotalProcessorTime.TotalMilliseconds-before;long closedBytes=proc.PrivateMemorySize64;var second=new SettingsWindow(host);host.Window=second;second.Show();bool sameSta=second.Dispatcher.CheckAccess()&&!second.IsDisposed;second.CloseWithoutPrompt();File.WriteAllText(Option("--output","artifacts/lifecycle")+".json",JsonSerializer.Serialize(new{closed=window.IsDisposed,closedIdleCpuMs=closedCpu,closedPrivateBytes=closedBytes,reopenedSameSta=sameSta}));Application.ExitThread();},DispatcherPriority.ApplicationIdle);if(args.Contains("--idle"))window.Dispatcher.BeginInvoke(async()=>{await Task.Delay(1000);var proc=Process.GetCurrentProcess();proc.Refresh();double openCpuStart=proc.TotalProcessorTime.TotalMilliseconds;long openBytesStart=proc.PrivateMemorySize64;await Task.Delay(5000);proc.Refresh();double openCpu=proc.TotalProcessorTime.TotalMilliseconds-openCpuStart;long openBytesEnd=proc.PrivateMemorySize64;window.CloseWithoutPrompt();await Task.Delay(1000);proc.Refresh();double closedCpuStart=proc.TotalProcessorTime.TotalMilliseconds;long closedBytesStart=proc.PrivateMemorySize64;await Task.Delay(5000);proc.Refresh();File.WriteAllText(Option("--output","artifacts/idle")+".json",JsonSerializer.Serialize(new{openCpuMsOverFiveSeconds=openCpu,openPrivateBytesStart=openBytesStart,openPrivateBytesEnd=openBytesEnd,closedCpuMsOverFiveSeconds=proc.TotalProcessorTime.TotalMilliseconds-closedCpuStart,closedPrivateBytesStart=closedBytesStart,closedPrivateBytesEnd=proc.PrivateMemorySize64}));Application.ExitThread();},DispatcherPriority.ApplicationIdle);if(args.Contains("--probe"))window.Dispatcher.BeginInvoke(async()=>await Probe(window,host,Option("--output","artifacts/preview"),constructionMs),DispatcherPriority.ApplicationIdle);Application.Run(context);}
+ static async Task Ready(SettingsWindow w){await w.Dispatcher.InvokeAsync(()=>w.UpdateLayout(),DispatcherPriority.Render);var t=new TaskCompletionSource();EventHandler? rendered=null;rendered=(_,_)=>{CompositionTarget.Rendering-=rendered;t.TrySetResult();};CompositionTarget.Rendering+=rendered;w.InvalidateVisual();await t.Task;DwmFlush();await w.Dispatcher.InvokeAsync(()=>{},DispatcherPriority.Background);}
+ static async Task Probe(SettingsWindow w,PreviewHost host,string output,double constructionMs){Directory.CreateDirectory(output);var results=new List<object>();var checks=new Dictionary<string,bool>();var frames=new List<double>();var process=Process.GetCurrentProcess();FrameworkElement root=(FrameworkElement)w.Content;T C<T>(string name)where T:FrameworkElement=>(T)root.FindName(name);string initial=UiText.Language;
+  async Task Measure(string name,Func<Task> action){var watch=Stopwatch.StartNew();double previous=0;var renderWatch=Stopwatch.StartNew();EventHandler handler=(_,_)=>{double now=renderWatch.Elapsed.TotalMilliseconds;if(previous>0&&now<190)frames.Add(now-previous);previous=now;};CompositionTarget.Rendering+=handler;try{await action();double block=watch.Elapsed.TotalMilliseconds;await Ready(w);results.Add(new{name,actionCompleteMs=block,paintAndQueueReadyMs=watch.Elapsed.TotalMilliseconds});await Task.Delay(180);}finally{CompositionTarget.Rendering-=handler;}}
+  void Capture(string name,int page){DwmGetWindowAttribute(w.Handle,9,out var r,16);var rect=System.Drawing.Rectangle.FromLTRB(r.L,r.T,r.Right,r.Bottom);bool safe=GetForegroundWindow()==w.Handle&&Screen.AllScreens.Any(s=>s.Bounds.Contains(rect))&&w.CurrentPage==page&&UiText.Language==initial;if(w.WindowState==WindowState.Maximized){rect=System.Drawing.Rectangle.Intersect(rect,Screen.FromHandle(w.Handle).WorkingArea);safe=GetForegroundWindow()==w.Handle&&w.CurrentPage==page&&UiText.Language==initial;}if(safe){using var image=new Bitmap(rect.Width,rect.Height);using(var g=Graphics.FromImage(image))g.CopyFromScreen(rect.Location,System.Drawing.Point.Empty,rect.Size);image.Save(Path.Combine(output,name+".png"));}results.Add(new{name,page=w.CurrentPage,language=UiText.Language,captured=safe});}
+  try{await Ready(w);for(int i=0;i<6;i++){int page=i%3;await Measure("page-"+i,()=>{w.ShowPage(page);return Task.CompletedTask;});}w.ShowPage(1);var language=C<ComboBox>("Language");language.IsDropDownOpen=true;checks["language_popup_open"]=language.Template.FindName("PART_Popup",language) is System.Windows.Controls.Primitives.Popup popup&&popup.IsOpen;language.IsDropDownOpen=false;bool original=C<CheckBox>("Startup").IsChecked==true;C<CheckBox>("Startup").IsChecked=!original;
+   await Measure("language-out",async()=>{C<ComboBox>("Language").SelectedIndex=initial=="en"?0:1;await w.LanguageChange;});checks["language_preserves_unsaved_startup"]=C<CheckBox>("Startup").IsChecked!=original;await Measure("language-back",async()=>{C<ComboBox>("Language").SelectedIndex=initial=="en"?1:0;await w.LanguageChange;});C<Button>("Cancel").RaiseEvent(new RoutedEventArgs(Button.ClickEvent));checks["cancel_restores_values"]=C<CheckBox>("Startup").IsChecked==original;
+   w.WindowState=WindowState.Minimized;w.WindowState=WindowState.Normal;w.Activate();SetForegroundWindow(w.Handle);for(int i=0;i<3;i++){w.ShowPage(i);await Ready(w);await Task.Delay(190);Capture(i==0?"reminders-window":i==1?"settings-window":"help-window",i);}SystemCommands.MaximizeWindow(w);await Ready(w);checks["maximized"]=w.WindowState==WindowState.Maximized;await Task.Delay(190);Capture("maximized-window",2);SystemCommands.RestoreWindow(w);await Ready(w);checks["restored"]=w.WindowState==WindowState.Normal;
+   w.Width=560;w.Height=620;w.ShowPage(0);await Ready(w);await Task.Delay(190);Capture("narrow-window",0);w.ShowPage(1);await Ready(w);await Task.Delay(190);Capture("narrow-settings-window",1);C<ComboBox>("Letters").SelectedIndex=16;checks["letter_requires_confirmation"]=C<CheckBox>("Confirmed").IsChecked!=true;C<CheckBox>("Confirmed").IsChecked=true;await w.Save();checks["memory_save_keeps_binding"]=host.Values.Shortcut=="Ctrl+Alt+Q"&&host.Values.Confirmed;
+   await Task.Delay(1000);int layouts=0;EventHandler layout=(_,_)=>layouts++;w.LayoutUpdated+=layout;process.Refresh();long privateOpen=process.PrivateMemorySize64;double idleCpu=process.TotalProcessorTime.TotalMilliseconds;await Task.Delay(1000);process.Refresh();w.LayoutUpdated-=layout;File.WriteAllText(Path.Combine(output,"probe.json"),JsonSerializer.Serialize(new{language=initial,constructionMs,motion=w.Motion,results,checks,animationRenderingIntervalsMs=frames,idleLayoutPasses=layouts,privateBytesOpen=privateOpen,idleCpuMsOverOneSecond=process.TotalProcessorTime.TotalMilliseconds-idleCpu,scope="Shared WPF view and production WinForms STA pump; isolated memory host; no notification engine, user settings or WeChat."},new JsonSerializerOptions{WriteIndented=true}));
+  }catch(Exception e){File.WriteAllText(Path.Combine(output,"error.txt"),e.ToString());}finally{w.CloseWithoutPrompt();await Task.Delay(500);process.Refresh();double closedCpu=process.TotalProcessorTime.TotalMilliseconds;long closedBytes=process.PrivateMemorySize64;await Task.Delay(1000);process.Refresh();double closedIdleCpu=process.TotalProcessorTime.TotalMilliseconds-closedCpu;var next=new SettingsWindow(host);host.Window=next;next.Show();await Ready(next);bool reopened=!next.IsDisposed&&next.Dispatcher.CheckAccess();next.CloseWithoutPrompt();File.WriteAllText(Path.Combine(output,"lifecycle.json"),JsonSerializer.Serialize(new{closed=w.IsDisposed,closedPrivateBytes=closedBytes,closedIdleCpuMs=closedIdleCpu,reopenedSameSta=reopened,viewCount=2}));Application.ExitThread();}
+ }
 }
-internal sealed class PreviewHost : IControlCenterHost
+internal sealed class PreviewHost:IControlCenterHost
 {
-    readonly string scenario;
-    CenterValues values;
-    public Form? Form;
-    internal PreviewHost(string scenario){this.scenario=scenario;values=new(scenario!="setup",scenario!="paused",false,null,"",false,false);}
-    public bool IsPreview=>true;
-    public CenterValues Values=>values;
-    public CenterState State=>new(!values.Consented?CenterPhase.Setup:!values.Enabled?CenterPhase.Paused:scenario=="error"?CenterPhase.Attention:scenario=="active"?CenterPhase.Active:CenterPhase.Waiting,
-        values.Consented?"4.1.15.56":null,false,false,false,"界面预览：演示数据，不连接微信，不保存真实配置。");
-    public Task<CenterResult> Save(CenterDraft draft)
-    {
-        if(draft.Shortcut.Length>0&&!System.Text.RegularExpressions.Regex.IsMatch(draft.Shortcut,@"^Ctrl\+Alt\+[A-Z]$"))
-            return Task.FromResult(new CenterResult(false,"请核对快捷键格式；也可以留空。此为界面预览，未写入配置。"));
-        if(scenario=="error")return Task.FromResult(new CenterResult(false,"设置文件暂时无法访问。此为错误展示预览，未写入真实配置。"));
-        values=new(true,draft.Enabled,draft.Startup,draft.Path,draft.ShortcutChanged?draft.Shortcut:values.Shortcut,draft.ShortcutChanged?draft.Confirmed:values.Confirmed,draft.ShortcutChanged?draft.PauseShortcut:values.PauseShortcut);
-        return Task.FromResult(new CenterResult(true,"预览设置已应用到内存；未保存真实配置，也不会发送通知或快捷键。"));
-    }
-    public CenterResult SetEnabled(bool enabled){values=values with{Enabled=enabled};return new(true,enabled?"预览：已恢复。未连接微信。":"预览：已暂停。未连接微信。");}
-    public CenterResult Test()=>new(true,"预览：未发送 Windows 通知。正式版会检查实际通知通道。");
-    public void Quit()=>Form?.Close();
-    public void Uninstall()=>throw new IOException("预览没有可卸载的安装。");
+ public SettingsWindow? Window;public bool IsPreview=>true;public CenterValues Values{get;private set;}=new(true,true,false,null,"",false,false);
+ public CenterState State=>new(Values.Enabled?CenterPhase.Active:CenterPhase.Paused,"4.1.15.56",false,Values.Confirmed,false,"Isolated memory preview. No WeChat connection.");
+ public Task<CenterResult> Save(CenterDraft d){Values=new(true,d.Enabled,d.Startup,d.Path,d.ShortcutChanged?d.Shortcut:Values.Shortcut,d.ShortcutChanged?d.Confirmed:Values.Confirmed,d.ShortcutChanged?d.PauseShortcut:Values.PauseShortcut);return Task.FromResult(new CenterResult(true,"Preview saved to memory only."));}
+ public CenterResult SetEnabled(bool value){Values=Values with{Enabled=value};return new(true,"Preview only");}public CenterResult Test()=>new(true,"Preview only. No notification sent.");public void Quit()=>Window?.CloseWithoutPrompt();public void Uninstall()=>throw new IOException("Preview only");
 }
