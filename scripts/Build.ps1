@@ -2,7 +2,7 @@
 param([string]$OutputDirectory,[switch]$Offline)
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath((Join-Path $PSScriptRoot '..'))
-$version='0.3.0-rc.2'
+$version='0.3.0'
 if(-not $OutputDirectory){$OutputDirectory=Join-Path $root ('artifacts\release-'+$version)}
 $out=[IO.Path]::GetFullPath($OutputDirectory)
 if(Test-Path -LiteralPath $out){throw '输出目录已存在；请选择新的目录，不覆盖既有发行证据。'}
@@ -47,15 +47,15 @@ foreach($name in @('Install.cmd','Install.ps1','Rollback.cmd','Uninstall.ps1')) 
     if($name.EndsWith('.ps1')){[IO.File]::WriteAllText($to,[IO.File]::ReadAllText($from),[Text.UTF8Encoding]::new($true))}
     else{[IO.File]::WriteAllText($to,([IO.File]::ReadAllText($from).Replace("`r`n","`n").Replace("`n","`r`n")),[Text.UTF8Encoding]::new($false))}
 }
-foreach($name in @('LICENSE','PRIVACY.md','THIRD_PARTY_NOTICES.md')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
+foreach($name in @('LICENSE','PRIVACY.md','PRIVACY.en.md','README.en.md','THIRD_PARTY_NOTICES.md')){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $package $name)}
 Copy-Item -LiteralPath (Join-Path $root 'docs\QUICKSTART.zh-CN.md') -Destination (Join-Path $package 'README.zh-CN.md')
 Copy-Item -LiteralPath (Join-Path $root 'docs\WINDOWS-SDK-LICENSE.rtf') -Destination (Join-Path $package 'WINDOWS-SDK-LICENSE.rtf')
 $files=@(Get-ChildItem -LiteralPath $package -File|Sort-Object Name|ForEach-Object{@{Name=$_.Name;Sha256=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash}})
-@{Schema=1;Product='WeChatNotify';Version=$version;Architecture='win-x64';FrameworkDependent=$true;Files=$files}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $package 'package-files.json') -Encoding UTF8
+@{Schema=1;Product='WeChatNotify';Version=$version;BuildRevision='ui-fix.20261103.1';BaselineCommit='96f948fb79807cca4263f038420825b146749fda';Architecture='win-x64';FrameworkDependent=$true;Files=$files}|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $package 'package-files.json') -Encoding UTF8
 $binaryZip=Join-Path $out ('WeChatNotify-'+$version+'-win-x64.zip')
 $sourceZip=Join-Path $out ('WeChatNotify-'+$version+'-source.zip')
 Compress-Archive -Path (Join-Path $package '*') -DestinationPath $binaryZip -CompressionLevel Optimal
 Compress-Archive -Path (Join-Path $source '*') -DestinationPath $sourceZip -CompressionLevel Optimal
 @($binaryZip,$sourceZip)|ForEach-Object{(Get-FileHash -LiteralPath $_ -Algorithm SHA256).Hash+'  '+[IO.Path]::GetFileName($_)}|Set-Content -LiteralPath (Join-Path $out 'SHA256SUMS.txt') -Encoding ASCII
-@{Version=$version;SourceFiles=$sourceHashes;PackageFiles=$files;Signed=$false;SelfContained=$false}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $out 'build-manifest.json') -Encoding UTF8
+@{Version=$version;SourceFiles=$sourceHashes;PackageFiles=$files;BuildRevision='ui-fix.20261103.1';BaselineCommit='96f948fb79807cca4263f038420825b146749fda';SourceDescription='Exact modified source set identified by SourceFiles hashes, not historical tag archive';Signed=$false;SelfContained=$false}|ConvertTo-Json -Depth 6|Set-Content -LiteralPath (Join-Path $out 'build-manifest.json') -Encoding UTF8
 Get-Item -LiteralPath $binaryZip,$sourceZip|Select-Object Name,Length
