@@ -10,7 +10,7 @@ A small independent Windows utility that turns WeChat attention requests into Wi
 
 **0.3.0 — control center refresh, prerelease.** Requires Windows x64 and **.NET 10 Desktop Runtime x64**. Windows 11 is recommended.
 
-![Reminders page in the isolated native preview](docs/images/en-reminders.png)
+![Reminders page in the isolated WPF preview](docs/images/en-reminders.png)
 
 Screenshots show the real control center with an in-memory preview host. The preview does not access WeChat or demonstrate successful message receipt. No preview configuration ships in the application.
 
@@ -26,7 +26,7 @@ It is **not a per-message API**: consecutive requests may merge, some messages m
 
 ## Get started
 
-1. Download the **win-x64.zip** from [Releases](https://github.com/CanstaSolance/wechat-notification-helper/releases) and **extract all files**. Install [.NET 10 Desktop Runtime x64 from Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) if needed, not the SDK, ASP.NET runtime, or base runtime.
+1. Download the **WeChatNotify-0.3.0-r2-win-x64.zip** from [Releases](https://github.com/CanstaSolance/wechat-notification-helper/releases) and **extract all files**. Install [.NET 10 Desktop Runtime x64 from Microsoft](https://dotnet.microsoft.com/en-us/download/dotnet/10.0) if needed, not the SDK, ASP.NET runtime, or base runtime.
 2. Run **Install.cmd**. In the app, choose **Settings**, read the explanation, opt in, and choose **Save changes**. The installer does not request administrator privileges or modify WeChat. You can choose **Language / 语言 → English** in the same app; an existing Chinese user's language stays Chinese until changed.
 3. Choose **Send test notification** on **Reminders**, check the Windows notification center, and keep your independently opened and signed-in WeChat running. A test verifies the Windows notification path, not delivery for every WeChat message.
 
@@ -34,7 +34,7 @@ The package is unsigned. Compare SHA256SUMS.txt from the same release to check i
 
 ## Settings and help
 
-![Settings page in the isolated native preview](docs/images/en-settings.png)
+![Settings page in the isolated WPF preview](docs/images/en-settings.png)
 
 **System notifications** enables attention notifications. **Start when I sign in** starts this helper at sign-in without launching WeChat. **Open WeChat from a notification** is optional: personally check WeChat's actual show/hide-window shortcut. Click the recorder and press that combination, or select its final A–Z letter from the dropdown, then confirm that it matches WeChat. Escape, Tab, focus loss or a short timeout cancels recording. If WeChat intercepts the global combination, use the letter selector; it does not send a shortcut. Do not copy a developer's binding. Supported: **Ctrl+Alt+letter**, without Shift. Leave blank if uncertain.
 
@@ -46,7 +46,7 @@ If a test does not pop up, check the notification center, Do Not Disturb and Win
 
 ## Close, exit, update and uninstall
 
-![Help page in the isolated native preview](docs/images/en-help.png)
+![Help page in the isolated WPF preview](docs/images/en-help.png)
 
 Closing settings leaves an opted-in background host running. Reopen WeChatNotify.exe or its Start-menu entry to return to the same instance. **Help → Quit** exits with confirmation. Closing without first-use consent exits the candidate. Old Windows notifications may remain; clicking one can briefly launch a callback process without resuming background monitoring.
 
@@ -67,7 +67,7 @@ Read the [full English privacy notice](PRIVACY.en.md). This utility reads public
 [Build](docs/DEVELOPING.md) · [Changelog](CHANGELOG.md) · MIT © 2026 CanstaSolance · [Third-party notices](THIRD_PARTY_NOTICES.md)
 Shortcut entry is now a focused local recorder with Escape/Tab/focus-loss/12-second cancellation and an A–Z selector fallback. Only Ctrl+Alt+letter is supported; Shift is rejected. Global WeChat shortcuts may interrupt recording. Choose the letter instead, then personally confirm the existing WeChat shortcut. Ordinary notification saves preserve the binding.
 
-This v0.3.0 repaint/language revision updates the existing release. The v0.3.0-rc.2 tag and automatic Source code archive remain historical. For exact current sources, use the new v0.3.0 source.zip and SHA256SUMS.txt, or the reviewed main commit. Build provenance and exact source-file hashes are in build-manifest.json.
+This v0.3.0 repaint/language revision updates the existing release. The v0.3.0-rc.2 tag and automatic Source code archive remain historical. For exact current sources, use the new v0.3.0-r2-source.zip and SHA256SUMS.txt, or the reviewed main commit. Build provenance and exact source-file hashes are in build-manifest.json.
 
 ## FAQ
 
