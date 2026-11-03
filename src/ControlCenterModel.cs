@@ -24,17 +24,17 @@ internal static class CenterCopy
         !consented?CenterPhase.Setup:checking?CenterPhase.Checking:!enabled?CenterPhase.Paused:!ready?CenterPhase.Attention:source=="active"&&boundCount>0?CenterPhase.Active:CenterPhase.Waiting;
     internal static (string Title, string Description, string Badge) Status(CenterPhase phase) => phase switch
     {
-        CenterPhase.Active => ("提醒已开启", "微信发出新提醒时，会通过 Windows 通知你。", "已就绪"),
-        CenterPhase.Waiting => ("等你打开微信", "微信运行后，助手会自动接收提醒。", "等候中"),
-        CenterPhase.Paused => ("提醒已暂停", "想继续时，点一下恢复。", "已暂停"),
-        CenterPhase.Checking => ("正在检查微信", "正在确认安装位置与官方签名，请稍候。", "检查中"),
-        CenterPhase.Attention => ("未能准备好提醒", "请到设置选择官方微信程序，然后保存重试。", "需处理"),
-        _ => ("开启微信提醒", "先到设置了解并启用助手，快捷键可以稍后设置。", "尚未启用")
+        CenterPhase.Active => (UiText.T("提醒已开启"), UiText.T("微信发出新提醒时，会通过 Windows 通知你。"), UiText.T("已就绪")),
+        CenterPhase.Waiting => (UiText.T("等你打开微信"), UiText.T("微信运行后，助手会自动接收提醒。"), UiText.T("等候中")),
+        CenterPhase.Paused => (UiText.T("提醒已暂停"), UiText.T("想继续时，点一下恢复。"), UiText.T("已暂停")),
+        CenterPhase.Checking => (UiText.T("正在检查微信"), UiText.T("正在确认安装位置与官方签名，请稍候。"), UiText.T("检查中")),
+        CenterPhase.Attention => (UiText.T("未能准备好提醒"), UiText.T("请到设置选择官方微信程序，然后保存重试。"), UiText.T("需处理")),
+        _ => (UiText.T("开启微信提醒"), UiText.T("先到设置了解并启用助手，快捷键可以稍后设置。"), UiText.T("尚未启用"))
     };
     internal static string FriendlyFailure(Exception exception) => exception switch
     {
-        UnauthorizedAccessException => "Windows 没有允许保存。请确认当前用户可以访问助手安装目录，再重试。",
-        IOException => "设置或安装文件暂时无法访问。请确认文件没有被移动、占用或改动后重试。",
-        _ => "这一步没有完成。请稍后重试；若仍失败，可展开技术信息并参考帮助反馈。"
+        UnauthorizedAccessException => UiText.T("Windows 没有允许保存。请确认当前用户可以访问助手安装目录，再重试。"),
+        IOException => UiText.T("设置或安装文件暂时无法访问。请确认文件没有被移动、占用或改动后重试。"),
+        _ => UiText.T("这一步没有完成。请稍后重试；若仍失败，可展开技术信息并参考帮助反馈。")
     };
 }

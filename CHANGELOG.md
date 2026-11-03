@@ -1,3 +1,11 @@
+# v0.3.0 — repaint and bilingual UI revision
+
+- Repairs native background/rounded-corner artifacts and stale page sizing after restore.
+- Adds saved Chinese/English choice in the same application, including notification wording and English online help/privacy.
+- Removes repeat binding/protection reads from visible UI refresh.
+- Keeps optional Ctrl+Alt+A–Z activation, consent, signed-image/current-user gates, incident protection and single host unchanged.
+- UI display v0.3.0 is separate from build revision ui-fix.20261103.1.
+- Update the existing release; preserve the old tag/assets as historical rollback. GitHub automatic Source code archive of v0.3.0-rc.2 is NOT this revision. Use the new source.zip and manifest SourceFiles hashes.
 # 0.3.0-rc.2 — Compact control center
 
 Top navigation, notification illustration, compact setting rows, edit-only save area and focused shortcut recording with A–Z fallback. Corrects Shift support wording. Existing bindings survive ordinary saves; same-key reconfirmation after updates uses existing gates. No native input-path expansion.

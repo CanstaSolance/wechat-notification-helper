@@ -1,3 +1,28 @@
+# v0.3.0 repaint and language revision — 2026-11-03
+
+This updates assets in the existing release; it does not create a new Release or move the historical v0.3.0-rc.2 tag. The new source ZIP/manifest exact file set is authoritative. Display version v0.3.0; build revision ui-fix.20261103.1; base commit 96f948fb79807cca4263f038420825b146749fda.
+
+Root causes addressed:
+- Rounded owner-drawn buttons painted only their shape, leaving rectangular background pixels. They now have a native rounded window region and full clipped background painting.
+- Parent surfaces used Graphics.Clear and mixed buffered parent painting with native child HWNDs; whole-surface erase and independent child ordering caused missing/overwritten controls. Use clipped fills, atomic native child-tree composition (WS_EX_COMPOSITED), and complete background paint. No continuous invalidation/delay workaround.
+- Page AutoSize/docking retained stale widths across resize. Fixed-size scrollable pages and explicit resize bounds restore fill width; layout is suspended/resumed as one page transaction.
+- Display refresh performed binding/protection file reads on the UI thread. Display caches update at engine/action events; periodic visible refresh no longer rereads them. Page handles/layout are prepared once.
+- UI language is an independent small preference, defaulting to English for non-Chinese systems and Chinese for existing consenting users without an explicit preference. Both actual payload text and normal UI actions are translated. Stable Windows notification identity stays 微信提醒助手.
+
+Native validation:
+- Isolated shared-form host only: no WeChat, notification listening, test notification, global input shortcut or real config write.
+- Actual visible-window screen pixels captured only while the candidate HWND was foreground and fully on-screen. These are NOT DrawToBitmap captures.
+- Both languages: 18 switches with focus changes, pointer hover in own window, resize and minimize/restore; actual language selector toggled both ways.
+- Actual monitor DPI 120 (125%). English cold maximum 441ms / warm median 80ms; Chinese cold maximum 534ms / warm median 110ms in this bounded harness. These are synchronous ShowPage timings, not end-to-end physical-click latency. No claim of instant behavior or universal performance.
+- Reviewed real screen images after switching/restoring show complete content at restored fill width; native corners no longer leave black rectangular remnants.
+- Physical 100/150/200% monitor changes and live high-contrast theme switching were not performed. Prior layout simulations are not recategorized as native DPI evidence.
+- New locale checks cover non-Chinese default, existing-user compatibility, saved preference priority, English private notification wording and reversible labels. Existing shortcut/identity/incident tests remain.
+
+Native harness results/screens are under artifacts/accepted-native-en and accepted-native-zh locally; only six clean own-window screenshots are in the public source export. Raw user bug screenshots and local execution records remain private.
+
+Historical scope follows:
+
+---
 # 0.3.0-rc.2 — compact product UI / shortcut entry
 
 The 920×680 shared WinForms control center replaces the sidebar with segmented navigation, a static explicitly labeled notification illustration, compact setting rows and edit-only save actions. No new framework, resident host or WeChat event/input source.

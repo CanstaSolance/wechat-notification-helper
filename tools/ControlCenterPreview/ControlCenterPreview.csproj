@@ -6,4 +6,4 @@
   <Compile Include="../../src/ControlCenterModel.cs" Link="ControlCenterModel.cs"/>
   <Compile Include="../../src/CenterControls.cs" Link="CenterControls.cs"/>
  </ItemGroup>
-</Project>
+<ItemGroup><EmbeddedResource Include="../../src/Strings.en.txt" LogicalName="WeChatNotifier.Strings.en.txt" WithCulture="false"/><Compile Include="../../src/UiText.cs" Link="UiText.cs"/></ItemGroup></Project>

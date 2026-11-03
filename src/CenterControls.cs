@@ -61,7 +61,7 @@ internal sealed class SurfaceCard : TableLayoutPanel
     }
     protected override void OnPaintBackground(PaintEventArgs e)
     {
-        e.Graphics.Clear(Parent?.BackColor??CenterTheme.Canvas);e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
+        using(var canvas=new SolidBrush(Parent?.BackColor??CenterTheme.Canvas))e.Graphics.FillRectangle(canvas,ClientRectangle);e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;
         using var path=Outline();using var fill=new SolidBrush(CenterTheme.Surface);e.Graphics.FillPath(fill,path);
     }
     protected override void OnPaint(PaintEventArgs e)
@@ -72,7 +72,7 @@ internal sealed class SurfaceCard : TableLayoutPanel
 }
 internal sealed class BrandMark : Control
 {
-    internal BrandMark(){Size=new Size(38,38);AccessibleName="微信提醒助手图标";TabStop=false;SetStyle(ControlStyles.UserPaint|ControlStyles.OptimizedDoubleBuffer,true);}
+    internal BrandMark(){Size=new Size(38,38);AccessibleName=UiText.T("微信提醒助手图标");TabStop=false;SetStyle(ControlStyles.UserPaint|ControlStyles.OptimizedDoubleBuffer,true);}
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);e.Graphics.SmoothingMode=SmoothingMode.AntiAlias;

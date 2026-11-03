@@ -43,7 +43,7 @@ $state=Join-Path ([Environment]::GetFolderPath('LocalApplicationData')) 'WeChatN
 if(Test-Path -LiteralPath $state) {
     if((Get-Item -Force -LiteralPath $state).Attributes -band [IO.FileAttributes]::ReparsePoint){throw '状态目录不允许重定向。'}
     # Preserve incident blocks even on uninstall; they must never silently expire.
-    $names=@('preferences.json','activation-shortcut.json','status.json','identity.json','activation.json','callback.json','cold-callback.json','delivery.json','notification-error.json','startup-error.json','fatal-error.json','uninstall-error.json','ipc-error.json','source-cleanup.json')
+    $names=@('ui-language.json','preferences.json','activation-shortcut.json','status.json','identity.json','activation.json','callback.json','cold-callback.json','delivery.json','notification-error.json','startup-error.json','fatal-error.json','uninstall-error.json','ipc-error.json','source-cleanup.json')
     foreach($name in $names){foreach($suffix in @('','.tmp')){$path=Join-Path $state ($name+$suffix);if(Test-Path -LiteralPath $path){Remove-Item -LiteralPath $path}}}
     $assets=Join-Path $state 'assets'
     if((Test-Path -LiteralPath $assets) -and -not((Get-Item -Force -LiteralPath $assets).Attributes -band [IO.FileAttributes]::ReparsePoint)) {

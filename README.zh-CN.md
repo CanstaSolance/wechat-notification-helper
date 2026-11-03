@@ -1,10 +1,14 @@
+**中文 | [English: app, installation, privacy](README.en.md)**
+
+同一应用可在设置的 Language / 语言中选择中文或 English，立即保存。已有用户保持中文。
+
 # 微信提醒助手
 
 **微信有新提醒时，在 Windows 通知里看见；设置好后，点一下回到微信。** 通知隐藏消息正文，助手不占用托盘图标。
 
 [下载预发布版](https://github.com/CanstaSolance/wechat-notification-helper/releases) · [三步上手](#三步上手) · [隐私说明](PRIVACY.md) · [English](README.en.md)
 
-> 这是独立、非官方工具。当前版本 **0.3.0-rc.2（紧凑界面预发布）**。需要 Windows x64 和 **.NET 10 Desktop Runtime x64**。
+> 这是独立、非官方工具。当前版本 **0.3.0（紧凑界面预发布）**。需要 Windows x64 和 **.NET 10 Desktop Runtime x64**。
 
 ![提醒：实际运行的隔离预览，未连接微信](docs/images/overview.png)
 
@@ -22,7 +26,7 @@
 
 ## 三步上手
 
-1. 从 [Releases](https://github.com/CanstaSolance/wechat-notification-helper/releases) 下载 **WeChatNotify-0.3.0-rc.2-win-x64.zip**，先**全部解压**，不要从压缩包内运行。缺少运行环境时，从[微软官方下载页](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)安装 **.NET Desktop Runtime 10，Windows x64**（不是 SDK、ASP.NET 或普通 Runtime）。
+1. 从 [Releases](https://github.com/CanstaSolance/wechat-notification-helper/releases) 下载 **WeChatNotify-0.3.0-win-x64.zip**，先**全部解压**，不要从压缩包内运行。缺少运行环境时，从[微软官方下载页](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)安装 **.NET Desktop Runtime 10，Windows x64**（不是 SDK、ASP.NET 或普通 Runtime）。
 2. 双击解压文件夹里的 **Install.cmd**。进入“设置”，阅读说明、勾选同意并保存。安装器不请求管理员权限，也不修改微信。
 3. 在“提醒”点击**发送测试通知**，检查 Windows 通知中心。然后让你已自行打开、登录的微信正常运行。发送测试通知只检查助手到 Windows 的通道，不证明每条微信消息都能收到。
 
@@ -77,7 +81,7 @@
 
 建议 Windows 11 x64。Windows 10 **尚未完成实机验证**；不提供 ARM64 或 x86 发行包。
 
-既有通知和点击打开行为仅在**一台 Windows 11 x64、官方微信 4.1.15.56** 上验证。其他官方签名版本属于实验性支持。0.3.0-rc.2 重做控制中心和文档，保留通知引擎与打开逻辑；这不是新的真实来信或跨机器兼容性验收。完整范围见[验证记录](docs/VALIDATION.md)。
+既有通知和点击打开行为仅在**一台 Windows 11 x64、官方微信 4.1.15.56** 上验证。其他官方签名版本属于实验性支持。0.3.0 重做控制中心和文档，保留通知引擎与打开逻辑；这不是新的真实来信或跨机器兼容性验收。完整范围见[验证记录](docs/VALIDATION.md)。
 
 ## 隐私与反馈
 
@@ -87,9 +91,11 @@
 
 [开发与构建](docs/DEVELOPING.md) · [更新记录](CHANGELOG.md) · MIT © 2026 CanstaSolance · [第三方许可](THIRD_PARTY_NOTICES.md)
 
-### 0.3.0-rc.2 快捷键录入
+### 0.3.0 快捷键录入
 
 在“设置”点录入按钮，再按微信现有的 Ctrl + Alt + A–Z。松开字母键后显示键帽。Esc、Tab、失焦或约12秒未完成会取消，不保存。微信全局快捷键可能抢先响应，让录入中断；此时直接用“从按键中选择”下拉框选 A–Z，不必手敲，也不会代你发送按键。
 
 仅支持 Ctrl + Alt + 字母，不支持 Shift。录入不等于核实微信设置；首次建立、修改或微信更新后重建绑定时仍需亲自确认。取消录入和普通提醒选项保存不改变既有绑定。清除快捷键会停用并清空该绑定，不影响提醒设置。
 尚未核对快捷键时，可点“稍后设置”：放下这次快捷键改动，只保存其他提醒选项，既有绑定不会被覆盖。
+
+This v0.3.0 repaint/language revision updates the existing release. The v0.3.0-rc.2 tag and automatic Source code archive remain historical. For exact current sources, use the new v0.3.0 source.zip and SHA256SUMS.txt, or the reviewed main commit. Build provenance and exact source-file hashes are in build-manifest.json.

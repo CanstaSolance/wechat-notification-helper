@@ -1,0 +1,138 @@
+0.3.0-rc.2 · 预发布|v0.3.0 · Preview
+Ctrl加Alt之后的字母|Letter after Ctrl + Alt
+Windows 没有允许保存。请确认当前用户可以访问助手安装目录，再重试。|Windows could not save this setting. Check access to the helper folder and try again.
+不用每次手动开启助手。|Ready when you sign in.
+与微信现有的“显示/隐藏窗口”快捷键一致|This matches WeChat's current Show/Hide shortcut
+仅支持 Ctrl + Alt + A–Z，不支持 Shift 或功能键。|Use Ctrl + Alt + A–Z. Shift and function keys are not supported.
+从按键中选择：Ctrl + Alt +|Or choose: Ctrl + Alt +
+使用与隐私|Help and privacy
+使用帮助|Help
+使用微信现有的“显示/隐藏窗口”快捷键。|Use WeChat's existing Show/Hide shortcut.
+保存更改|Save changes
+保护中 · 请手动打开微信|Protected · Open WeChat manually
+先到设置了解并启用助手，快捷键可以稍后设置。|Enable reminders in Settings. You can add a shortcut later.
+关闭窗口后，助手仍在后台。|Closing this window keeps the helper running.
+关闭窗口后，提醒仍会继续。|Reminders continue when you close this window.
+关闭窗口后仍会提醒。要完全停止，请退出助手。|Closing this window keeps reminders running. Choose Quit to stop.
+关闭设置|Close settings
+功能验证：点击打开原微信|Test: open your running WeChat
+助手不读取聊天、联系人或登录凭据。设置、程序路径、快捷键确认和有限运行记录仅保存在本机；没有自有上传或遥测服务。|The helper does not read chats, contacts or credentials. Settings, program paths, shortcut confirmation and limited status records stay on this PC. No upload or telemetry service is provided.
+卸载助手|Uninstall
+去哪里核对？|Where do I check?
+去设置|Set up
+发送测试通知|Send test notification
+只移除助手，不删除微信或聊天。保护记录和未知文件会保留。继续？|Remove only the helper? WeChat and chats stay untouched. Safety records and unknown files are kept.
+可选，使用微信现有的快捷键。|Optional. Uses your existing WeChat shortcut.
+在线使用帮助 ↗|Online guide ↗
+在线说明需联网。退出后旧通知可能仍在通知中心，点击旧通知可能短暂启动处理过程。|Online help requires internet access. Old notifications may remain after quitting; clicking one can briefly start a callback process.
+在线隐私说明 ↗|Privacy notice ↗
+尚未启用|Not enabled
+尚未启用；关闭窗口会退出。|Not enabled. Closing this window exits the helper.
+已取消录入，原快捷键未改动。|Recording cancelled. Your previous shortcut is unchanged.
+已同意启用；需要停止时请暂停或退出|Enabled with your consent. Pause or quit to stop.
+已就绪|Ready
+已开启|On
+已恢复提醒。|Reminders resumed.
+已暂停|Paused
+已暂停提醒，助手仍在后台。|Reminders paused. The helper is still running.
+已设置|Configured
+已设置 · 点击通知时尝试打开微信|Configured · Click a notification to open WeChat
+帮助|Help
+开启|On
+开启微信提醒|Enable WeChat reminders
+开始设置|Get started
+当前页面|Current page
+录入完成。请确认它与微信里的设置一致。|Recorded. Confirm that it matches WeChat's shortcut.
+录入微信现有快捷键|Record your existing WeChat shortcut
+录入或选字母，再核对微信里的实际设置。|Press your shortcut or choose a letter, then check it in WeChat.
+待就绪|Waiting
+微信|WeChat
+微信 → 设置 → 快捷键 → 显示/隐藏窗口。找不到或不确定时，清除快捷键，先使用提醒即可。|WeChat > Settings > Shortcuts > Show/Hide. If unsure, clear the shortcut and use reminders alone.
+微信发出新提醒时，会通过 Windows 通知你。|See Windows notifications when WeChat requests your attention.
+微信安装位置|WeChat location
+微信提醒助手|WeChat Notify
+微信提醒助手 · 隔离预览|WeChat Notify · Isolated preview
+微信提醒助手图标|WeChat Notify icon
+微信有新提醒|WeChat has a new alert
+微信程序|WeChat program
+微信程序|Weixin.exe;WeChat.exe|WeChat program|Weixin.exe;WeChat.exe
+微信程序位置|WeChat program location
+微信运行后，助手会自动接收提醒。|Open WeChat to start receiving reminders.
+快捷键改动已放下，其他提醒选项可以照常保存。|Shortcut edits set aside. You can save your other settings.
+恢复提醒|Resume
+想继续时，点一下恢复。|Choose Resume when you're ready.
+我已了解并同意启用助手|I understand and agree to enable the helper
+提醒|Reminders
+提醒偏好|Preferences
+提醒可能合并或遗漏，不显示姓名和正文。助手不会替你启动或登录微信。完整说明见帮助。|Alerts may merge or be missed. Names and message text are hidden. The helper never launches or signs in to WeChat. See Help for details.
+提醒已开启|Reminders are on
+提醒已暂停|Reminders paused
+提醒状态：|Reminder status:
+提醒设置已保存；快捷键尚未保存。请确认选择的是官方微信，并重新核对快捷键。|Reminder settings saved, but the shortcut was not. Select the official WeChat program and check the shortcut again.
+提醒设置已保存；本机的安全保护阻止了通知点击打开微信。请保留保护，暂时手动打开微信。|Reminder settings saved. A safety record prevents shortcut activation. Keep it intact and open WeChat manually.
+撤销|Undo
+收到微信提醒时，显示系统通知。|Show Windows notifications for WeChat alerts.
+放弃未保存的改动？|Discard unsaved changes?
+暂停提醒|Pause
+暂停点击打开|Pause notification-click activation
+更多设置|More settings
+未保存的改动已撤销。|Unsaved changes discarded.
+未能准备好提醒|Reminders need setup
+未能打开浏览器。请从 GitHub 仓库查看说明。|Could not open the browser. Visit the GitHub repository for help.
+未设置 · 不影响接收提醒|Not configured · Reminders still work
+松开字母键完成录入。|Release the letter key to finish.
+查看详细信息|Technical details
+检查中|Checking
+正在检查微信|Checking WeChat
+正在确认安装位置与官方签名，请稍候。|Checking the installation and official signature.
+没有看到通知？先发送测试通知，再检查 Windows 通知中心、勿扰和通知权限。微信在前台时可能不再弹出提醒。|No notification? Send a test, then check Windows notification center, Do Not Disturb and permissions. Alerts may be suppressed while WeChat is in front.
+测试提醒已交给 Windows。若没有弹出，请查看通知中心，并检查勿扰及通知设置。|Test sent to Windows. If no banner appears, check notification center, Do Not Disturb and notification permissions.
+测试提醒暂时无法显示。请先保存设置，并在 Windows 中允许“微信提醒助手”通知。|A test cannot be shown yet. Save settings and allow notifications for the helper in Windows.
+消息正文不会显示在通知里。|Message text stays hidden.
+消息正文已隐藏|Message text hidden
+消息正文已隐藏，点击打开微信|Message text hidden. Click to open WeChat.
+清除|Clear
+点击通知打开微信|Open WeChat from a notification
+点击通知打开微信（可选）|Open WeChat on click (optional)
+点此录入快捷键|Record shortcut
+版本与排查|Version and troubleshooting
+界面预览 · 未连接微信|UI preview · Not connected to WeChat
+登录启动项不属于本组件，未覆盖|Startup entry belongs to another application; left unchanged
+登录启动项移除失败|Could not remove the startup entry
+登录启动项读回不一致|Startup setting could not be verified
+稍后设置|Set up later
+等你打开微信|Waiting for WeChat
+等候中|Waiting
+管理助手|Manage
+系统提醒|System notifications
+自动识别|Detect automatically
+若组合键被微信占用，录入可能中断。可从下面选择。|If WeChat intercepts the shortcut, choose its letter below.
+设置|Settings
+设置已保存，但提醒没有准备好。请确认官方微信位置，再重新保存；也可查看隐私与帮助。|Settings saved, but reminders are not ready. Check the WeChat location and save again, or open Help.
+设置已保存。关闭窗口后，助手会继续在后台运行。|Saved. The helper keeps running when you close this window.
+设置或安装文件暂时无法访问。请确认文件没有被移动、占用或改动后重试。|A settings or installation file is unavailable. Check that it has not been moved or changed, then try again.
+请先了解并同意启用助手。|Please read the explanation and agree before enabling the helper.
+请先到“提醒设置”了解并启用助手。|Open Settings to read the explanation and enable the helper.
+请先确认快捷键与微信一致；也可点“稍后设置”，只保存其他选项。|Confirm the shortcut matches WeChat, or choose Set up later to save only the other options.
+请到设置选择官方微信程序，然后保存重试。|Select the official WeChat program in Settings, then save again.
+请在微信的“设置 → 快捷键 → 显示/隐藏窗口”核对。当前只支持 Ctrl + Alt + 字母，不支持 Shift；也可以留空，只接收提醒。|Check WeChat > Settings > Shortcuts > Show/Hide. Only Ctrl+Alt+A–Z is supported, without Shift. Leave it blank for reminders only.
+请按 Ctrl + Alt + 一个字母；Esc 取消。|Press Ctrl + Alt + a letter. Esc cancels.
+请按快捷键…|Press shortcut…
+这一步没有完成。请稍后重试；若仍失败，可展开技术信息并参考帮助反馈。|This could not be completed. Try again, or open Help and technical details.
+这是一条功能验证通知，不代表收到新消息。|This is a test notification, not a new message.
+退出助手|Quit
+退出后停止接收新提醒。确定退出？|Stop receiving new alerts and quit?
+选择微信程序|Select WeChat program
+通知与打开行为只在一台 Windows 11 x64、微信 4.1.15.56 上验证。其他官方版本属于实验性支持。|Notification and activation behavior was tested on one Windows 11 x64 PC with WeChat 4.1.15.56. Other official versions are experimental.
+通知只显示“微信有新提醒”，不含姓名、正文，也不会直达某个聊天。连续提醒可能合并，部分消息可能没有提示。|Notifications show a generic WeChat alert, without names or message text. They do not open a specific chat. Alerts may merge, and some may be missed.
+通知示意|Notification example
+通知示意：微信，微信有新提醒，消息正文已隐藏|Notification example: WeChat alert, message text hidden
+随电脑登录启动|Start when I sign in
+来源状态：|Source state: 
+通知初始化：|Notification setup: 
+快捷键检查：|Shortcut check: 
+最近打开结果：|Last open result: 
+仅供本地排查；反馈时请勿附原始配置。|For local diagnostics only. Do not attach raw settings to reports.
+隔离预览不会打开浏览器。|The isolated preview does not open a browser.
+需处理|Action needed
+首次启用|Before you enable
