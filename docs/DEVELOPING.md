@@ -22,7 +22,7 @@ CI on Windows restores locked dependencies, runs isolated checks, checks Windows
 
 ## State and lifecycle
 
-Normal execution is WinForms without a NotifyIcon or main window. Settings are a temporary normal window on the same host UI thread. Session-scoped mutex and current-user-only named pipe prevent a second monitoring host; IPC is restricted to fixed verbs and an exact activation nonce. Both requests and responses have size/time bounds. COM cold activation has a 12-second lifetime and no monitoring source. If forwarding is uncertain it never retries the shortcut directly.
+Normal execution retains the WinForms ApplicationContext without a NotifyIcon or main window. Settings are an on-demand WPF Window on the same STA and WinForms message pump; modeless keyboard interop is enabled for that window. Session-scoped mutex and current-user-only named pipe prevent a second monitoring host; IPC is restricted to fixed verbs and an exact activation nonce. Both requests and responses have size/time bounds. COM cold activation has a 12-second lifetime and no monitoring source. If forwarding is uncertain it never retries the shortcut directly.
 
 User state is under the actual `%LOCALAPPDATA%\WeChatNotify`, independent of binary location. A handle-derived final path check detects MSIX/AppData virtualization and the setup/background entry can relaunch through the existing Explorer desktop. It checks again; failures stop. No diagnostic file is written to the binary directory.
 
@@ -49,10 +49,8 @@ SettingsForm consumes IControlCenterHost, a display/action boundary. LiveControl
 The three pages remain parented and hide/show in one content container, so DPI/layout inheritance is retained. The outer row explicitly fills remaining space. At first show, minimum dimensions are clamped to the working area before the window is clamped. Long content scrolls; save actions remain outside it. High contrast uses SystemColors; physical monitor/theme validation remains separate.
 
 Development-only preview (not included in installed package):
-- Build tools/ControlCenterPreview/ControlCenterPreview.csproj with the .NET 10 SDK.
-- Run with --state setup, waiting, active, paused or error for labeled in-memory states.
-- --capture OUTPUT draws the real shared form into three client-area PNGs.
-- --scale 1.5 or 2 with --viewport WIDTHxHEIGHT simulates layout/font scaling, not an OS DPI transition.
-- --exercise RESULT.json runs a few actual shared-control handlers against memory state only, then exits.
+- Build `tools/ControlCenterPreview/ControlCenterPreview.csproj` with the .NET 10 SDK.
+- Run with `--probe --language en|zh --output <directory>` for full-window captures and page/language timing checks.
+- Use `--idle --output <file.json>` for an uninstrumented short CPU sample, `--lifecycle --output <file.json>` for close/reopen checks, or add `--reduced` to disable motion.
 
-The preview has no reference to production runtime/configuration. Public images under docs/images are source/documentation assets only. Binary packages include a small standalone Chinese quick-start text and PRIVACY.md, not a screenshot folder. In-app help opens fixed version-tag GitHub URLs in the browser; release publication must verify that the tag and documents exist.
+The current r2 view uses `src/ControlCenter.xaml` and `src/SettingsWindow.cs`; the old WinForms view classes are removed. The preview references the product assembly but uses an isolated memory host and never loads the production runtime state. Neither mode uses WeChat or sends Windows notifications. Public images under `docs/images` are documentation assets only. Binary packages include a standalone Chinese quick-start text and PRIVACY.md, not a screenshot folder. In-app help opens fixed version-tag GitHub URLs in the browser; release publication must verify that the tag and documents exist.

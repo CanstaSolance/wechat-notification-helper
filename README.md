@@ -26,7 +26,7 @@
 
 ## 三步上手
 
-1. 从 [Releases](https://github.com/CanstaSolance/wechat-notification-helper/releases) 下载 **WeChatNotify-0.3.0-win-x64.zip**，先**全部解压**，不要从压缩包内运行。缺少运行环境时，从[微软官方下载页](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)安装 **.NET Desktop Runtime 10，Windows x64**（不是 SDK、ASP.NET 或普通 Runtime）。
+1. 从 [Releases](https://github.com/CanstaSolance/wechat-notification-helper/releases) 下载 **WeChatNotify-0.3.0-r2-win-x64.zip**，先**全部解压**，不要从压缩包内运行。缺少运行环境时，从[微软官方下载页](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)安装 **.NET Desktop Runtime 10，Windows x64**（不是 SDK、ASP.NET 或普通 Runtime）。
 2. 双击解压文件夹里的 **Install.cmd**。进入“设置”，阅读说明、勾选同意并保存。安装器不请求管理员权限，也不修改微信。
 3. 在“提醒”点击**发送测试通知**，检查 Windows 通知中心。然后让你已自行打开、登录的微信正常运行。发送测试通知只检查助手到 Windows 的通道，不证明每条微信消息都能收到。
 
@@ -98,4 +98,4 @@
 仅支持 Ctrl + Alt + 字母，不支持 Shift。录入不等于核实微信设置；首次建立、修改或微信更新后重建绑定时仍需亲自确认。取消录入和普通提醒选项保存不改变既有绑定。清除快捷键会停用并清空该绑定，不影响提醒设置。
 尚未核对快捷键时，可点“稍后设置”：放下这次快捷键改动，只保存其他提醒选项，既有绑定不会被覆盖。
 
-This v0.3.0 repaint/language revision updates the existing release. The v0.3.0-rc.2 tag and automatic Source code archive remain historical. For exact current sources, use the new v0.3.0 source.zip and SHA256SUMS.txt, or the reviewed main commit. Build provenance and exact source-file hashes are in build-manifest.json.
+This v0.3.0 repaint/language revision updates the existing release. The v0.3.0-rc.2 tag and automatic Source code archive remain historical. For exact current sources, use the new v0.3.0-r2-source.zip and SHA256SUMS.txt, or the reviewed main commit. Build provenance and exact source-file hashes are in build-manifest.json.

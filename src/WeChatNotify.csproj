@@ -2,10 +2,10 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
-    <UseWindowsForms>true</UseWindowsForms>
+    <UseWindowsForms>true</UseWindowsForms><UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable>
     <AssemblyName>WeChatNotify</AssemblyName><RootNamespace>WeChatNotifier</RootNamespace>
-    <Version>0.3.0</Version><InformationalVersion>0.3.0+ui-fix.20261103.1</InformationalVersion><AssemblyVersion>0.3.0.0</AssemblyVersion>
+    <Version>0.3.0</Version><InformationalVersion>0.3.0+ui-polish.20261103.2</InformationalVersion><AssemblyVersion>0.3.0.0</AssemblyVersion>
     <RepositoryUrl>https://github.com/CanstaSolance/wechat-notification-helper</RepositoryUrl>
     <Product>微信提醒助手（独立工具）</Product><ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyTitle>微信提醒助手</AssemblyTitle>
@@ -18,4 +18,4 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild><PathMap>$(MSBuildProjectDirectory)=/_/src</PathMap>
   </PropertyGroup>
   <ItemGroup><PackageReference Include="CommunityToolkit.WinUI.Notifications" Version="7.1.2" /><EmbeddedResource Include="Assets/helper.png" /><EmbeddedResource Include="Assets/helper.ico" LogicalName="WeChatNotifier.Assets.helper.ico" /></ItemGroup>
-<ItemGroup><EmbeddedResource Include="Strings.en.txt" LogicalName="WeChatNotifier.Strings.en.txt" WithCulture="false" /></ItemGroup></Project>
+<ItemGroup><EmbeddedResource Include="Strings.en.txt" LogicalName="WeChatNotifier.Strings.en.txt" WithCulture="false" /></ItemGroup><ItemGroup><Page Remove="ControlCenter.xaml"/><EmbeddedResource Include="ControlCenter.xaml" LogicalName="WeChatNotifier.ControlCenter.xaml"/></ItemGroup></Project>

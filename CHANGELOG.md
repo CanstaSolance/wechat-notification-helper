@@ -1,3 +1,9 @@
+# v0.3.0 · r2 UI polish (build ui-polish.20261103.2)
+
+- Replaced the control-center view with WPF on the existing single WinForms host. The compact status, settings and help pages now share a single title/header, consistent 1px borders and short interruptible motion. Notification identity, policy, user state and shortcut guards retain their prior implementation.
+- Language changes update tagged static labels and save asynchronously with serialized persistence and failure rollback. Page transitions are immediate; system reduced motion and high contrast suppress decorative motion.
+- The previous v0.3.0 build ui-fix.20261103.1 and historical v0.3.0-rc.2 tag remain distinct.
+
 # v0.3.0 — repaint and bilingual UI revision
 
 - Repairs native background/rounded-corner artifacts and stale page sizing after restore.

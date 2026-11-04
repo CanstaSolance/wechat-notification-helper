@@ -10,5 +10,8 @@ internal static class UiText
  internal static string T(string text)=>text=="0.3.0-rc.2 · 预发布"?(Language=="en"?"v0.3.0 · Preview":"v0.3.0 · 预发布"):Language=="en"&&english.TryGetValue(text,out var en)?en:text;
  internal static string Resolve(string? saved,bool consented,string system)=>saved is "en" or "zh"?saved:consented?"zh":system.StartsWith("zh",StringComparison.OrdinalIgnoreCase)?"zh":"en";
  internal static void Set(string language){string next=language=="en"?"en":"zh";Persist?.Invoke(next);Language=next;}
+ static readonly SemaphoreSlim languageGate=new(1,1);
+ internal static async Task SetAsync(string language){await languageGate.WaitAsync();try{string next=language=="en"?"en":"zh";var persist=Persist;if(persist!=null)await Task.Run(()=>persist(next));Language=next;}finally{languageGate.Release();}}
+ internal static string? Key(string text)=>english.ContainsKey(text)?text:english.FirstOrDefault(p=>p.Value==text).Key;
  internal static string ConvertText(string text){if(Language=="en")return T(text);var entry=english.FirstOrDefault(p=>p.Value==text);return entry.Key??text;}
 }

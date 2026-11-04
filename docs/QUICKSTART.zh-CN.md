@@ -1,6 +1,6 @@
 # 微信提醒助手 · 三步开始
 
-版本 v0.3.0，独立、非官方工具。需要 Windows x64 与 .NET 10 Desktop Runtime x64。可在同一个程序的“设置 → Language / 语言”中选择中文或 English，选择后立即保存；已有用户默认保留中文。
+版本 v0.3.0（r2 安装包），独立、非官方工具。需要 Windows x64 与 .NET 10 Desktop Runtime x64。可在同一个程序的“设置 → Language / 语言”中选择中文或 English，选择后立即保存；已有用户默认保留中文。
 
 1. 全部解压发行包。缺少运行环境时，从 https://dotnet.microsoft.com/en-us/download/dotnet/10.0 安装 Desktop Runtime 10（x64）。
 2. 双击 Install.cmd，进入“设置”，阅读并同意后保存。首次使用不带开发者的快捷键设置。

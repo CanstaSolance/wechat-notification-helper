@@ -24,7 +24,6 @@
     "src/app.manifest",
     "src/AssemblyInfo.cs",
     "src/Program.cs",
-    "src/SettingsForm.cs",
     "src/NotificationIdentity.cs",
     "src/Assets/helper.ico",
     "src/Assets/helper.png",
@@ -55,18 +54,18 @@
     "docs/images/settings.png",
     "docs/images/privacy.png",
     "src/ControlCenterModel.cs",
-    "src/CenterControls.cs",
     "src/Runtime/LiveControlCenter.cs",
     "tools/ControlCenterPreview/ControlCenterPreview.csproj",
     "tools/ControlCenterPreview/Program.cs",
-    "src/ProductControls.cs",
-    "src/ShortcutRecorder.cs",
     "src/UiText.cs",
     "src/Strings.en.txt",
-    "tools/ControlCenterPreview/NativeRun.cs",
     "PRIVACY.en.md",
     "docs/images/en-reminders.png",
     "docs/images/en-settings.png",
-    "docs/images/en-help.png"
+    "docs/images/en-help.png",
+    "src/SettingsWindow.cs",
+    "src/ControlCenter.xaml",
+    "src/ShortcutEntryState.cs",
+    "src/GlobalUsings.cs"
   ]
 }
